@@ -1,0 +1,13 @@
+project_context
+.claude
+.env
+
+# ignore python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pyw
+*.pyz
+*.pywz
+*.pyzw

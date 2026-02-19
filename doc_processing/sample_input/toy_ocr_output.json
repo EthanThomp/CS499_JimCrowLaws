@@ -1,0 +1,95 @@
+{
+  "source": {
+    "filename": "Gen_assemb_v1-1865.pdf",
+    "title": "Acts Passed at the Session of the General Assembly of the Commonwealth of Kentucky",
+    "year": 1865,
+    "document_type": "session_laws"
+  },
+  "pages": [
+    {
+      "page_number": 1,
+      "text": "# ACTS PASSED AT THE SESSION OF THE GENERAL ASSEMBLY OF THE COMMONWEALTH OF KENTUCKY\n\nJanuary Session, 1865\n\nPublished by authority.\n\nFRANKFORT, KY.:\nPRINTED BY JOHN H. HARNEY, PUBLIC PRINTER.\n1865.",
+      "keyword_hits": []
+    },
+    {
+      "page_number": 87,
+      "text": "# CHAPTER 399\n\n# AN ACT to establish and regulate common schools for colored children in this Commonwealth.\n\nBe it enacted by the General Assembly of the Commonwealth of Kentucky:\n\n§ 1. That it shall be the duty of the trustees of common schools in each county to establish and maintain separate schools for white and colored children, and no colored child shall be permitted to attend any school established for white children, and no white child shall be permitted to attend any school established for colored children.\n\n§ 2. In distributing the school fund no distinction shall be made on account of race or color, and separate schools for white and colored children shall be maintained.\n\n§ 3. The rate of taxation for the support of colored schools shall not be less than the rate levied for white schools, and the school funds shall be apportioned to the respective races in proportion to the number of pupil children of each race.\n\nApproved March 10, 1865.",
+      "keyword_hits": ["colored", "white"]
+    },
+    {
+      "page_number": 134,
+      "text": "# CHAPTER 1787\n\n# AN ACT to revise, amend, and reduce into one the Bastardy laws of this Commonwealth.\n\nBe it enacted by the General Assembly of the Commonwealth of Kentucky:\n\n§ 1. That every child shall be deemed a bastard, within the meaning of this act, who shall be begotten and born out of lawful wedlock; and in cases where a woman shall have been divorced from her husband on the ground of her being pregnant at the time of her intermarriage by another man, and having concealed her pregnancy from her husband, the child of which she was thus pregnant shall be deemed a bastard within the meaning of this act, and for all purposes whatever.\n\n§ 2. Any unmarried white woman may go before the clerk of the county court of the county wherein she has been delivered of a bastard child, or of the county of her residence, if she was delivered thereof in another State, and accuse any person of being the father of the child. The clerk shall examine the mother of such bastard child, under oath, concerning her residence, and her married or single condition when the child was begotten, where and when she was delivered of child, if such child was delivered out of the State, and reduce her statement to writing, and sign the same as clerk.\n\n§ 3. On such examination, if the child appear to be less than three years old, a warrant shall be issued by the clerk, directed to a sheriff or any constable, requiring the person accused to be apprehended and brought before the county judge of the county wherein he may be found.\n\nApproved April 2, 1865.",
+      "keyword_hits": ["white"]
+    },
+    {
+      "page_number": 145,
+      "text": "# CHAPTER 845\n\n# AN ACT to amend the Revenue Laws of this Commonwealth.\n\nBe it enacted by the General Assembly of the Commonwealth of Kentucky:\n\n§ 1. That from and after the passage of this act, it shall be the duty of the tax-payers of this Commonwealth to pay their taxes to the sheriff at the county seat of their respective counties, or such other place as he may designate by notice given, between the 1st day of June and the 15th of December of each year.\n\n§ 2. The sheriff shall keep an office at or near the courthouse of his county, shall, himself or deputy, attend to the taxes: Providing, That in the county of Kenton he shall keep an office, by himself or deputy, at Independence and in the city of Covington; and in the county of Campbell he shall keep an office, by himself or deputy, at Alexandria and in the city of Newport.\n\n§ 3. That if any tax-payer shall fail or refuse to pay his taxes, as above provided, the sheriff is hereby authorized to collect from such delinquent ten per cent. on the amount of his tax due the State, which shall be retained by the sheriff as additional compensation.\n\n§ 4. This act shall be in force from and after its passage.\n\nApproved February 6, 1865.",
+      "keyword_hits": []
+    },
+    {
+      "page_number": 162,
+      "text": "# No. 83\n\n# RESOLUTION relating to slaves in the United States service from the State of Kentucky.\n\nWHEREAS, By an act of Congress, approved February 24th 1864, it is made the duty of the Secretary of War to appoint a commission in each of the States represented in Congress, charged to award to each loyal person to whom a colored volunteer may owe service a just compensation, not exceeding three hundred dollars; and whereas, there are many thousands of such volunteers in the United States service from this State, and no commission has been appointed for the State of Kentucky, in compliance with said act; therefore,\n\nResolved, That this Assembly is of the opinion it is just and due to the people of this State, who have slaves in the United States service, that the Secretary of War should immediately appoint said commission.\n\nResolved, further, That the Governor of the Commonwealth be requested to forward a copy of these proceedings to the Secretary of War, and urge him to comply with the same.\n\nApproved May 31, 1865.",
+      "keyword_hits": ["colored"]
+    },
+    {
+      "page_number": 200,
+      "text": "# CHAPTER 1523\n\n# AN ACT to prevent the amalgamation of the white and negro races.\n\nBe it enacted by the General Assembly of the Commonwealth of Kentucky:\n\n§ 1. That if any white man shall intermarry with a negro or mulatto woman, or any white woman shall intermarry with a negro or mulatto man, every person so offending shall be guilty of a misdemeanor, and upon conviction thereof shall be fined not less than one hundred dollars nor more than five hundred dollars.\n\n§ 2. Any marriage between a white person and a negro or mulatto is hereby declared to be absolutely void from the beginning, and no court in this Commonwealth shall recognize any such pretended marriage as valid.\n\n§ 3. This act shall take effect from its passage.\n\nApproved April 15, 1865.",
+      "keyword_hits": ["white", "negro"]
+    }
+  ],
+  "keyword_references": [
+    {
+      "keyword": "colored",
+      "page_number": 87,
+      "line_number_in_page": 3,
+      "context": "AN ACT to establish and regulate common schools for colored children in this Commonwealth."
+    },
+    {
+      "keyword": "colored",
+      "page_number": 87,
+      "line_number_in_page": 7,
+      "context": "no colored child shall be permitted to attend any school established for white children"
+    },
+    {
+      "keyword": "white",
+      "page_number": 87,
+      "line_number_in_page": 7,
+      "context": "separate schools for white and colored children, and no colored child shall be permitted to attend any school established for white children"
+    },
+    {
+      "keyword": "white",
+      "page_number": 134,
+      "line_number_in_page": 8,
+      "context": "Any unmarried white woman may go before the clerk of the county court"
+    },
+    {
+      "keyword": "colored",
+      "page_number": 162,
+      "line_number_in_page": 3,
+      "context": "award to each loyal person to whom a colored volunteer may owe service a just compensation"
+    },
+    {
+      "keyword": "white",
+      "page_number": 200,
+      "line_number_in_page": 3,
+      "context": "if any white man shall intermarry with a negro or mulatto woman"
+    },
+    {
+      "keyword": "negro",
+      "page_number": 200,
+      "line_number_in_page": 3,
+      "context": "AN ACT to prevent the amalgamation of the white and negro races."
+    }
+  ],
+  "statistics": {
+    "total_pages": 6,
+    "pages_with_keyword_hits": 4,
+    "total_keyword_hits": 7
+  },
+  "ocr_metadata": {
+    "engine": "llama_parse",
+    "result_type": "json",
+    "processed_at": "2026-02-19T10:00:00Z",
+    "format_version": "2.0"
+  }
+}
