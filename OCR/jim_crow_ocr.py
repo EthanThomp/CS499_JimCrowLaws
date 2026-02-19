@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 from dotenv import load_dotenv
 from llama_parse import LlamaParse
 from typing import List, Dict
@@ -6,7 +7,7 @@ import json
 import tkinter as tk
 from tkinter import filedialog
 
-load_dotenv() # Load environment variables from .env file
+load_dotenv(Path(__file__).parent.parent / ".env")
 
 def select_pdf():
     root = tk.Tk()
@@ -127,8 +128,10 @@ def main():
             "reference_count": len(references)
         }
 
-        # Save result
-        output_filename = f"{os.path.splitext(os.path.basename(pdf_path))[0]}_results.json"
+        # Save result to ocr_results/
+        out_dir = Path(__file__).parent.parent / "ocr_results"
+        out_dir.mkdir(exist_ok=True)
+        output_filename = str(out_dir / f"{os.path.splitext(os.path.basename(pdf_path))[0]}_results.json")
         ocr.save_results(results, output_filename)
 
         # Print summary
