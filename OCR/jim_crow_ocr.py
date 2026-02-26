@@ -292,13 +292,13 @@ def split_pdf(pdf_path: str, output_dir: str, pages_per_chunk: int = 200) -> Lis
 
     doc = fitz.open(pdf_path)
     total = len(doc)
-    stem = Path(pdf_path).stem
+    # Use a short fixed name to avoid Windows MAX_PATH issues with long document titles
     chunk_paths = []
 
     for start in range(0, total, pages_per_chunk):
         end = min(start + pages_per_chunk, total)
         part_num = (start // pages_per_chunk) + 1
-        out_path = os.path.join(output_dir, f"{stem}_part{part_num:03d}.pdf")
+        out_path = os.path.join(output_dir, f"part{part_num:03d}.pdf")
 
         chunk_doc = fitz.open()
         chunk_doc.insert_pdf(doc, from_page=start, to_page=end - 1)
@@ -522,69 +522,114 @@ class JimCrowOCR:
             for pdf_path in pdf_paths
         }
 
+    KEYWORDS = [
+        "jim crow",
+        "segregation",
+        "separate but equal",
+        "colored",
+        "negro",
+        "white only",
+        "colored only",
+        "racial discrimination",
+        "miscegenation",
+        "poll tax",
+        "literacy test",
+        "grandfather clause"
+    ]
+
     def find_jim_crow_references(
         self,
         chunks: List[Dict],
         metadata: Dict,
         source_filename: str
-    ) -> List[Dict]:
+    ) -> Dict:
         """
-        Search each chunk for Jim Crow keywords.
-        Each match is a fully self-contained record with document metadata
-        embedded — ready to be fed directly to an LLM or filtered as a flat
-        dataset without any joining.
+        Search chunks for Jim Crow keywords and assemble the full output document
+        in the standard format expected by the document processing component.
+
+        Returns a dict with keys: source, pages, keyword_references, statistics,
+        ocr_metadata.
         """
-        keywords = [
-            "jim crow",
-            "segregation",
-            "separate but equal",
-            "colored",
-            "negro",
-            "white only",
-            "colored only",
-            "racial discrimination",
-            "miscegenation",
-            "poll tax",
-            "literacy test",
-            "grandfather clause"
-        ]
-
-        matches = []
-
+        # Group chunks by page number so we can build the pages array
+        pages_map: Dict[int, Dict] = {}
         for chunk in chunks:
-            lines = chunk["text"].split("\n")
+            pnum = chunk["page_number"]
+            if pnum not in pages_map:
+                pages_map[pnum] = {
+                    "page_number":        pnum,
+                    "page_number_source": chunk["page_number_source"],
+                    "text":               chunk["text"],
+                    "keyword_hits":       [],
+                }
+            else:
+                # Append text from multiple chunks on the same page
+                pages_map[pnum]["text"] += "\n" + chunk["text"]
+
+        # Scan every page for keyword matches
+        keyword_references = []
+        pages_with_hits = set()
+
+        for pnum in sorted(pages_map.keys()):
+            page = pages_map[pnum]
+            lines = page["text"].split("\n")
+            hits_on_page = []
 
             for i, line in enumerate(lines):
                 line_lower = line.lower()
-                for keyword in keywords:
+                for keyword in self.KEYWORDS:
                     if keyword in line_lower:
                         start = max(0, i - 2)
                         end = min(len(lines), i + 3)
                         context = "\n".join(lines[start:end])
 
-                        matches.append({
-                            # Document identity for LLM filtering
-                            "source_filename":      source_filename,
-                            "document_title":       metadata.get("title"),
-                            "document_author":      metadata.get("author"),
-                            "publication_date":     metadata.get("publication_date"),
-                            "document_subject":     metadata.get("subject"),
-                            "document_keywords":    metadata.get("keywords"),
-
-                            # Location within document 
-                            "page_number":          chunk["page_number"],
-                            "page_number_source":   chunk["page_number_source"],
-                            "chunk_index":          chunk["chunk_index"],
-                            "line_in_chunk":        i + 1,
-                            "total_pages":          metadata.get("page_count"),
-
-                            # Match content
-                            "keyword_matched":      keyword,
-                            "context":              context,
+                        keyword_references.append({
+                            "keyword":          keyword,
+                            "page_number":      pnum,
+                            "line_number_in_page": i + 1,
+                            "context":          context,
                         })
-                        break  # Avoid duplicate matches for the same line
 
-        return matches
+                        if keyword not in hits_on_page:
+                            hits_on_page.append(keyword)
+                        break  # one match per line
+
+            if hits_on_page:
+                page["keyword_hits"] = hits_on_page
+                pages_with_hits.add(pnum)
+
+        # Build pages array (only pages that have text)
+        pages = [pages_map[p] for p in sorted(pages_map.keys())]
+
+        # Extract year from publication_date
+        pub_date = metadata.get("publication_date") or ""
+        year = None
+        year_match = re.search(r"\b(1[89]\d{2})\b", pub_date)
+        if year_match:
+            year = int(year_match.group(1))
+
+        return {
+            "source": {
+                "filename":      source_filename,
+                "title":         metadata.get("title"),
+                "author":        metadata.get("author"),
+                "year":          year,
+                "document_type": None,   # Fill in manually or via future classifier
+            },
+            "pages": pages,
+            "keyword_references": keyword_references,
+            "statistics": {
+                "total_pages":           metadata.get("page_count"),
+                "parsed_chunks":         len(chunks),
+                "pages_with_keyword_hits": len(pages_with_hits),
+                "total_keyword_hits":    len(keyword_references),
+            },
+            "ocr_metadata": {
+                "engine":         "llama_parse",
+                "result_type":    "markdown",
+                "processed_at":   datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
+                "format_version": "2.0",
+            },
+        }
 
     def save_results(self, results: Dict, output_path: str):
         with open(output_path, "w", encoding="utf-8") as f:
@@ -671,27 +716,20 @@ def main():
         print(f"Warning: {fallback_count}/{len(chunks)} chunks could not determine true page number — "
               f"chunk index used as fallback (pypdf text too different from LlamaParse OCR to match).")
 
-    # Find references with metadata embedded in every record
-    references = ocr.find_jim_crow_references(chunks, metadata, filename)
-
-    results = {
-        "filename":        filename,
-        "metadata":        metadata,
-        "total_chunks":    len(chunks),
-        "reference_count": len(references),
-        "chunks":          chunks,      # Full chunk text for re-processing
-        "references":      references   # Flat, self-contained records for LLM / DB
-    }
+    # Find keyword references and assemble the output document
+    results = ocr.find_jim_crow_references(chunks, metadata, filename)
 
     output_filename = f"{os.path.splitext(filename)[0]}_results.json"
     ocr.save_results(results, output_filename)
 
+    stats = results["statistics"]
     print("\nExtraction complete!")
-    print(f"  Title:            {metadata.get('title') or '(not found)'}")
-    print(f"  Author:           {metadata.get('author') or '(not found)'}")
-    print(f"  Publication date: {metadata.get('publication_date') or '(not found)'}")
-    print(f"  Chunks parsed:    {len(chunks)}")
-    print(f"  References found: {len(references)}")
+    print(f"  Title:            {results['source'].get('title') or '(not found)'}")
+    print(f"  Author:           {results['source'].get('author') or '(not found)'}")
+    print(f"  Year:             {results['source'].get('year') or '(not found)'}")
+    print(f"  Chunks parsed:    {stats['parsed_chunks']}")
+    print(f"  Pages with hits:  {stats['pages_with_keyword_hits']}")
+    print(f"  Total keyword hits: {stats['total_keyword_hits']}")
 
 
 if __name__ == "__main__":
