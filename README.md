@@ -21,7 +21,7 @@ cp .env_template .env
 
 Install dependencies:
 ```bash
-pip3 install llama-parse llama-index python-dotenv
+pip3 install llama-parse python-dotenv pymupdf Pillow
 ```
 
 Run (opens a file picker to select a PDF):
