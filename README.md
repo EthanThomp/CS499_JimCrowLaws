@@ -137,3 +137,35 @@ Output: `doc_processing_results/{filename}_classified.json`
 ```
 
 Entries flagged `needs_human_review: true` (ambiguous cases or confidence < 0.7) are also listed separately in `human_review_queue`.
+
+---
+
+## Reviewer UI (`reviewer/`)
+
+A Gradio web app for human reviewers to review, correct, and sign off on LLM classifications before the data goes into the archive database.
+
+### Install
+
+```bash
+pip install gradio
+```
+
+### Run
+
+```bash
+python reviewer/reviewer_ui.py
+```
+
+Opens at `http://localhost:7860` in your browser.
+
+### What it does
+
+- Loads any classified JSON file from `doc_processing_results/`
+- Shows entries in priority order: flagged (`needs_human_review`) first, then `is_jim_crow=yes`, then the rest
+- Lets you correct `is_jim_crow` (yes / no / ambiguous) and `category`, leave a free-text note, and save
+- Saves corrections back to the same JSON file immediately on each "Save Review" click
+- Tracks progress with a live counter: overall entries reviewed and priority entries remaining
+
+### What "reviewed" means for a file
+
+A file is considered **complete** when all **priority entries** have been saved — that is, every entry where `is_jim_crow = "yes"` or `needs_human_review = true`. The UI shows a green "✅ All priority entries reviewed" banner when this threshold is reached.
