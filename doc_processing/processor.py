@@ -11,7 +11,6 @@ Output: doc_processing_results/{input_stem}_classified.json
 
 import json
 import os
-import re
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -100,19 +99,6 @@ def build_llm():
             "Choose from: anthropic, openai, ollama, openai_like"
         )
 
-# Heading patterns that mark the start of a new statute section.
-# The parser splits page text on these boundaries.
-HEADING_PATTERNS = [
-    r"^#{1,3}\s+(?:CHAPTER|Chapter)\s+\d+",     # # CHAPTER 399
-    r"^#{1,3}\s+(?:AN ACT|A RESOLUTION|No\.\s*\d+)",  # # AN ACT ...
-    r"^#{1,3}\s+RESOLUTION",                     # # RESOLUTION ...
-    r"^§\s*\d+\.",                               # § 1.
-    r"^Sec\.\s*\d+\.",                           # Sec. 187.
-]
-HEADING_REGEX = re.compile(
-    "|".join(HEADING_PATTERNS), re.MULTILINE
-)
-
 
 # ---------------------------------------------------------------------------
 # Step 1: Parse OCR JSON → Documents
@@ -127,48 +113,24 @@ def load_documents(ocr_path: Path) -> tuple[list[Document], dict]:
 
 
 # ---------------------------------------------------------------------------
-# Step 2: Segment pages → statute sections (TextNodes)
+# Step 2: Convert pages → TextNodes (one node per page)
 # ---------------------------------------------------------------------------
 
-def segment_page(doc: Document) -> List[TextNode]:
-    """
-    Split a page's text into statute sections using heading patterns.
-    Returns one TextNode per section; falls back to one node for the whole
-    page if no headings are found.
-    """
-    text = doc.text
-    splits = list(HEADING_REGEX.finditer(text))
-
-    if not splits:
-        # No headings — treat the whole page as one section
-        node = TextNode(
-            text=text.strip(),
-            metadata=dict(doc.metadata),
-        )
-        node.metadata["section_index"] = 0
-        return [node] if text.strip() else []
-
-    nodes = []
-    for i, match in enumerate(splits):
-        start = match.start()
-        end = splits[i + 1].start() if i + 1 < len(splits) else len(text)
-        section_text = text[start:end].strip()
-        if not section_text:
-            continue
-        node = TextNode(
-            text=section_text,
-            metadata=dict(doc.metadata),
-        )
-        node.metadata["section_index"] = i
-        nodes.append(node)
-
-    return nodes
-
-
 def segment_documents(docs: List[Document]) -> List[TextNode]:
+    """
+    Convert each page Document into a single TextNode.
+    Pages with no text content are skipped.
+    """
     nodes = []
     for doc in docs:
-        nodes.extend(segment_page(doc))
+        text = doc.text.strip()
+        if not text:
+            continue
+        node = TextNode(
+            text=text,
+            metadata=dict(doc.metadata),
+        )
+        nodes.append(node)
     return nodes
 
 
@@ -190,9 +152,9 @@ def build_program() -> LLMTextCompletionProgram:
     return program
 
 
-def make_entry_id(filename: str, page_number: int, section_index: int) -> str:
+def make_entry_id(filename: str, page_number: int) -> str:
     stem = Path(filename).stem.lower().replace(" ", "_")[:30]
-    return f"{stem}_p{page_number}_s{section_index}"
+    return f"{stem}_p{page_number}"
 
 
 def make_citation(source: dict, page_number: int) -> str:
@@ -209,7 +171,6 @@ def classify_node(
     meta = node.metadata
     filename = meta.get("source_filename", "")
     page_number = meta.get("page_number", 0)
-    section_index = meta.get("section_index", 0)
     year = meta.get("year")
 
     classification: StatuteClassification = program(
@@ -221,7 +182,7 @@ def classify_node(
     )
 
     return StatuteEntry(
-        entry_id=make_entry_id(filename, page_number, section_index),
+        entry_id=make_entry_id(filename, page_number),
         source_filename=filename,
         page_number=page_number,
         year=year,
@@ -288,9 +249,9 @@ def main():
     docs, source = load_documents(ocr_path)
     print(f"  Loaded {len(docs)} pages")
 
-    print("Segmenting into statute sections...")
+    print("Converting pages to text nodes...")
     nodes = segment_documents(docs)
-    print(f"  Found {len(nodes)} sections")
+    print(f"  Produced {len(nodes)} page nodes")
 
     print("Building LLM classification program...")
     program = build_program()
@@ -298,9 +259,8 @@ def main():
     entries = []
     for i, node in enumerate(nodes):
         page = node.metadata.get("page_number", "?")
-        sec = node.metadata.get("section_index", 0)
         preview = node.text[:60].replace("\n", " ")
-        print(f"  [{i+1}/{len(nodes)}] p{page}s{sec}: {preview}...")
+        print(f"  [{i+1}/{len(nodes)}] p{page}: {preview}...")
         entry = classify_node(node, program, source)
         entries.append(entry)
         result = entry.classification
