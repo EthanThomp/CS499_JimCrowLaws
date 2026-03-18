@@ -1,0 +1,22 @@
+{
+  "source": {
+    "filename": "Hotel Inspector Law 1914.pdf",
+    "title": "HOTEL INSPECTOR LAW",
+    "author": "Kentucky. Laws, statutes, etc. [from old catalog]",
+    "year": 1914,
+    "document_type": null
+  },
+  "pages": [],
+  "keyword_references": [],
+  "statistics": {
+    "total_pages": 20,
+    "pages_with_keyword_hits": 0,
+    "total_keyword_hits": 0
+  },
+  "ocr_metadata": {
+    "engine": "llama_cloud",
+    "result_type": "markdown",
+    "processed_at": "2026-03-18T00:37:14Z",
+    "format_version": "2.0"
+  }
+}

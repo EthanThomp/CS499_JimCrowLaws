@@ -1,0 +1,37 @@
+{
+  "source": {
+    "filename": "Militia act of 1873.pdf",
+    "title": "Kentucky state guard law. ... Militia act of 1873, in force December 1, 1873",
+    "author": "Kentucky.",
+    "year": 1873,
+    "document_type": null
+  },
+  "pages": [
+    {
+      "page_number": 11,
+      "text": "2\n# MILITIA LAW.\n\nyears who may be citizens or residents of the State, except persons who have served not less than five years in the army or navy of the United States, persons who may be active members of the volunteer militia, and persons already exempt from military service by the laws of the United States or of this State. (a)\n\n**Assessors' duty.**\n§ 2. It shall be the duty of the assessors to prepare annually a roll of all persons liable to be enrolled, residing within their respective counties; and they shall annually make out a roll of all such names, and place it, before the first day of June, in the hands of his county clerk; such clerk shall, immediately thereafter, record said roll of names in a book to be provided for that purpose, in the same manner as other books of record are provided; and such record shall be deemed a sufficient notification to all persons whose names are thus recorded that they have been enrolled in the militia.\n\n**Clerks' duty.**\n**Column in assessors' book for enrolling.**\n§ 3. In all forms of assessors' books furnished by the Auditor, there shall be provided a column for enrolling the militia.\n\n**Return to be transmitted to the Adjutant General**\n§ 4. The county clerk shall transmit to the Adjutant General of the State, prior to the first day of September, in every year, an annual return, stating the number of the militia of such county that have been enrolled.\n\n**Allowance to assessor and clerk.**\n§ 5. For the services required of the assessor and county clerk, there shall be allowed to each of these officers the sum of one cent for each name returned by the assessor and enrolled by the clerk.\n\n**Penalty on civil officers for failure of duty.**\n§ 6. All county clerks, or other civil officers, who shall neglect or refuse to obey the provisions of this chapter, shall forfeit and pay not more than five hundred nor less than twenty dollars for each and every offense, to be recovered in any court of competent jurisdiction, in the name, and for the use, of the Commonwealth.\n\n---\n\n(a) The militia of this Commonwealth shall consist of all free, able-bodied male persons (negroes, mulattoes, and Indians excepted) resident in the same, between the ages of eighteen and forty-five years, except such persons as now are, or hereafter may be, exempted by the laws of the United States, or of this State; but those who belong to religious societies, whose tenets forbid them to carry arms, shall not be compelled to do so, but shall pay an equivalent for personal services. (*Constitution, article 7, section 1, page III.*)",
+      "keyword_hits": [
+        "negro"
+      ]
+    }
+  ],
+  "keyword_references": [
+    {
+      "keyword": "negro",
+      "page_number": 11,
+      "line_number_in_page": 24,
+      "context": "---\n\n(a) The militia of this Commonwealth shall consist of all free, able-bodied male persons (negroes, mulattoes, and Indians excepted) resident in the same, between the ages of eighteen and forty-five years, except such persons as now are, or hereafter may be, exempted by the laws of the United States, or of this State; but those who belong to religious societies, whose tenets forbid them to carry arms, shall not be compelled to do so, but shall pay an equivalent for personal services. (*Constitution, article 7, section 1, page III.*)"
+    }
+  ],
+  "statistics": {
+    "total_pages": 81,
+    "pages_with_keyword_hits": 1,
+    "total_keyword_hits": 1
+  },
+  "ocr_metadata": {
+    "engine": "llama_cloud",
+    "result_type": "markdown",
+    "processed_at": "2026-03-18T03:14:46Z",
+    "format_version": "2.0"
+  }
+}

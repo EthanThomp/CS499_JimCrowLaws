@@ -1,0 +1,37 @@
+{
+  "source": {
+    "filename": "Insurance Law Related To Agents 1950.pdf",
+    "title": "Kentucky",
+    "author": "Kentucky.",
+    "year": 1950,
+    "document_type": null
+  },
+  "pages": [
+    {
+      "page_number": 21,
+      "text": "**304.518 Controlled business limit:**\n\n(1) The commissioner shall not grant an agent's or solicitor's license to any person if the commissioner has reasonable cause to believe that:\n\n(a) During either of the two (2) calendar years immediately preceding the request for renewal of any such license the license has been used principally for the purpose of writing controlled business; or\n\n(b) the circumstances of the applicant for such license are such as to cause the commissioner reasonably to believe that during the twelve-month period immediately following issuance or renewal of the license, if so issued or renewed, the license will be used principally for the purpose of writing controlled business.\n\nA license shall be deemed to be used principally for the purpose of writing controlled business if the aggregate net amount of commissions or other compensation received or to be received by the licensee or applicant on controlled business written or to be written during the period involved, exceeds the aggregate net amount of commissions or other compensation received or to be received by the licensee or applicant on insurance business, other than controlled business, written or to be written during the same period.\n\n(2) \"Controlled business\" means insurance procured or to be procured by or through such applicant or licensee upon:\n\n(a) His own life, person, property, or interests or those of his spouse or relatives by blood or marriage to the second degree;\n\n(b) The life, person, property, casualty risks, surety risks, or title risks of his employer, or his firm, or of any officer or member of his employer or firm, other than members of mutual insurers, or any spouse of such employer, officer, or member;\n\n(c) the property or interests of any corporation of which he has stock control, or of which the stock control is held by any combination of himself, his firm, his employer, controlling stockholders of his employer, and spouses; the property or interests of any subsidiary of any such corporation;\n\n18",
+      "keyword_hits": [
+        "marriage"
+      ]
+    }
+  ],
+  "keyword_references": [
+    {
+      "keyword": "marriage",
+      "page_number": 21,
+      "line_number_in_page": 13,
+      "context": "(2) \"Controlled business\" means insurance procured or to be procured by or through such applicant or licensee upon:\n\n(a) His own life, person, property, or interests or those of his spouse or relatives by blood or marriage to the second degree;\n\n(b) The life, person, property, casualty risks, surety risks, or title risks of his employer, or his firm, or of any officer or member of his employer or firm, other than members of mutual insurers, or any spouse of such employer, officer, or member;"
+    }
+  ],
+  "statistics": {
+    "total_pages": 69,
+    "pages_with_keyword_hits": 1,
+    "total_keyword_hits": 1
+  },
+  "ocr_metadata": {
+    "engine": "llama_cloud",
+    "result_type": "markdown",
+    "processed_at": "2026-03-18T00:56:25Z",
+    "format_version": "2.0"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "source": {
+    "filename": "The_Commerce_Laws_of_Kentucky-1912.pdf",
+    "title": "Commerce Laws of Kentucky",
+    "author": "Roy Wilhoit, H. C. McLellen",
+    "year": 1912,
+    "document_type": null
+  },
+  "pages": [],
+  "keyword_references": [],
+  "statistics": {
+    "total_pages": 241,
+    "pages_with_keyword_hits": 0,
+    "total_keyword_hits": 0
+  },
+  "ocr_metadata": {
+    "engine": "llama_cloud",
+    "result_type": "markdown",
+    "processed_at": "2026-03-18T04:44:08Z",
+    "format_version": "2.0"
+  }
+}

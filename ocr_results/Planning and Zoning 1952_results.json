@@ -1,0 +1,22 @@
+{
+  "source": {
+    "filename": "Planning and Zoning 1952.pdf",
+    "title": "Planning and zoning :Kentucky revised statutes pertaining to zoning and planning in third to sixth class cities, regional planning, slum clearance and redevelopment, airport zoning.",
+    "author": "Kentucky",
+    "year": 1952,
+    "document_type": null
+  },
+  "pages": [],
+  "keyword_references": [],
+  "statistics": {
+    "total_pages": 57,
+    "pages_with_keyword_hits": 0,
+    "total_keyword_hits": 0
+  },
+  "ocr_metadata": {
+    "engine": "llama_cloud",
+    "result_type": "markdown",
+    "processed_at": "2026-03-18T03:32:47Z",
+    "format_version": "2.0"
+  }
+}

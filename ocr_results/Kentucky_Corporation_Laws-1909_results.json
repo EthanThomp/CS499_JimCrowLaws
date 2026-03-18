@@ -1,0 +1,22 @@
+{
+  "source": {
+    "filename": "Kentucky_Corporation_Laws-1909.pdf",
+    "title": "Kentucky Corporation Laws",
+    "author": "**BEN L. BRUNER,**",
+    "year": 1909,
+    "document_type": null
+  },
+  "pages": [],
+  "keyword_references": [],
+  "statistics": {
+    "total_pages": 93,
+    "pages_with_keyword_hits": 0,
+    "total_keyword_hits": 0
+  },
+  "ocr_metadata": {
+    "engine": "llama_cloud",
+    "result_type": "markdown",
+    "processed_at": "2026-03-18T02:10:23Z",
+    "format_version": "2.0"
+  }
+}
