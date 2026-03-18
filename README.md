@@ -21,7 +21,7 @@ cp .env_template .env
 
 Install dependencies:
 ```bash
-pip3 install llama-parse python-dotenv pymupdf Pillow
+pip install "llama-cloud>=1.0" pypdf python-dotenv
 ```
 
 Run (opens a file picker to select a PDF):
@@ -40,14 +40,15 @@ The document processing component expects OCR output in this format.
   "source": {
     "filename": "Gen_assemb_v1-1865.pdf",
     "title": "Acts Passed at the Session of the General Assembly of Kentucky",
+    "author": "Kentucky General Assembly",
     "year": 1865,
-    "document_type": "session_laws"
+    "document_type": null
   },
   "pages": [
     {
       "page_number": 87,
       "text": "# CHAPTER 399\n\nAN ACT to establish separate schools...",
-      "keyword_hits": ["colored", "white"]
+      "keyword_hits": ["colored", "negro"]
     }
   ],
   "keyword_references": [
@@ -64,8 +65,8 @@ The document processing component expects OCR output in this format.
     "total_keyword_hits": 34
   },
   "ocr_metadata": {
-    "engine": "llama_parse",
-    "result_type": "json",
+    "engine": "llama_cloud",
+    "result_type": "markdown",
     "processed_at": "2026-02-19T10:00:00Z",
     "format_version": "2.0"
   }
