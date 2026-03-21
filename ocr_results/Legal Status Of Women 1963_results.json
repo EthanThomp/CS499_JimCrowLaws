@@ -1,12 +1,17 @@
 {
   "source": {
     "filename": "Legal Status Of Women 1963.pdf",
-    "title": "KENTKentucky :addendum to Women's Bureau bulletin 157-16 (revised)--The legal status of women in the United States of America, report for Kentucky as of January 1, 1959UCKY",
-    "author": null,
+    "title": "Kentucky :addendum to Women's Bureau bulletin 157-16 (revised)--The legal status of women in the United States of America, report for Kentucky as of January 1, 1959 : revised as of December 1, 1963",
+    "author": "Kentucky",
     "year": 1963,
     "document_type": null
   },
   "pages": [
+    {
+      "page_number": 1,
+      "text": "This is a reproduction of a library book that was digitized  \nby Google as part of an ongoing effort to preserve the  \ninformation in books and make it universally accessible.\nhttps://books.google.com",
+      "keyword_hits": []
+    },
     {
       "page_number": 2,
       "text": "331.4\nUn 336\n220.157-16\n\n# KENTUCKY\n\n*Addendum to*\n\nWOMEN'S BUREAU BULLETIN 157-16 (REVISED)—THE LEGAL STATUS OF WOMEN IN THE UNITED STATES OF AMERICA, REPORT FOR KENTUCKY AS OF JANUARY 1, 1959\n\n*Revised as of December 1, 1963*<sup>1</sup>\n\nThis addendum, used with the Report for Kentucky, presents a digest of the constitution and statutes affecting the legal status of women in Kentucky as of December 1, 1963. The CONTENTS list shows which topics have been changed by enactments since January 1, 1959, and should be consulted before reading the related topic in the Report.\n\n## CONTENTS\n\n<table>\n    <tr>\n        <th>Topic</th>\n        <th>1959 Report page</th>\n    </tr>\n    <tr>\n        <td>2. Contractual powers of a minor</td>\n        <td>3</td>\n    </tr>\n    <tr>\n        <td>3. Property exemptions from seizure for debt</td>\n        <td>4</td>\n    </tr>\n    <tr>\n        <td>17. Right of husband or wife to disinherit the other by will</td>\n        <td>9</td>\n    </tr>\n    <tr>\n        <td>18. Age of consent to marriage</td>\n        <td>9</td>\n    </tr>\n    <tr>\n        <td>22. Annulment</td>\n        <td>10</td>\n    </tr>\n</table>## CHANGES\n\n### 2. Contractual powers of a minor\n\nSecond paragraph: Delete because section 361.020 was repealed, and insert:\n\nThe new Uniform Commercial Code, which repealed the Uniform Sales Act that included section 361.020, provides: *Supplementary General Principles of Law Applicable*. Unless displaced by the particular provisions of this act, the principles of law and equity, including the law merchant and the law relative to capacity to contract . . . or other validating or invalidating cause shall supplement its provisions (sec. 355.1-103). The common-law rules that a minor may ratify or rescind his contracts upon attaining majority, except for the reasonable price of necessaries sold and delivered to him, are applicable.\n\n<sup>1</sup> Source: *Kentucky Revised Statutes Annotated*, Third Edition, 1963.\n\n712-094-63\n\nTHE LIBRARY OF THE\nUNIVERSITY OF ILLINOIS-URBANA\n3 0112 101571336",
@@ -60,9 +65,9 @@
     "total_keyword_hits": 5
   },
   "ocr_metadata": {
-    "engine": "llama_cloud",
-    "result_type": "markdown",
-    "processed_at": "2026-03-18T02:56:15Z",
+    "engine": "pypdf+llama_cloud",
+    "result_type": "text",
+    "processed_at": "2026-03-21T02:45:34Z",
     "format_version": "2.0"
   }
 }
