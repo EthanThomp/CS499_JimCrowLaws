@@ -196,7 +196,22 @@ def classify_node(
 # Step 4: Aggregate results and write output
 # ---------------------------------------------------------------------------
 
+def _infer_document_type(entries: List[StatuteEntry]) -> str:
+    """Return the most common LLM-inferred document_type across all entries."""
+    from collections import Counter
+    counts = Counter(
+        e.classification.document_type for e in entries
+        if e.classification.document_type
+    )
+    return counts.most_common(1)[0][0] if counts else "other"
+
+
 def aggregate_results(entries: List[StatuteEntry], source: dict) -> dict:
+    # Overwrite null document_type from OCR with LLM-inferred consensus value
+    source = dict(source)
+    if not source.get("document_type"):
+        source["document_type"] = _infer_document_type(entries)
+
     jim_crow = sum(1 for e in entries if e.classification.is_jim_crow == "yes")
     ambiguous = sum(1 for e in entries if e.classification.is_jim_crow == "ambiguous")
     needs_review = sum(1 for e in entries if e.classification.needs_human_review)

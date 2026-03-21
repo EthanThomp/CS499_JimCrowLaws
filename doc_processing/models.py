@@ -10,6 +10,10 @@ class StatuteClassification(BaseModel):
         "public_accommodations", "incarceration",
         "voting", "labor", "other"
     ]]
+    document_type: Literal[
+        "session_laws", "constitution", "state_constitution", "amendments",
+        "codes", "criminal_laws", "civil_laws", "other"
+    ]
     title: str
     summary: str                # 1–2 sentences
     keywords: List[str]
