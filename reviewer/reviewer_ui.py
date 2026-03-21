@@ -27,6 +27,17 @@ CATEGORIES = [
     "other",
 ]
 
+DOCUMENT_TYPES = [
+    "session_laws",
+    "constitution",
+    "state_constitution",
+    "amendments",
+    "codes",
+    "criminal_laws",
+    "civil_laws",
+    "other",
+]
+
 INSTRUCTIONS = """\
 - Choose a file from the dropdown — it loads automatically.
 - Entries appear in order of importance: uncertain or flagged ones come first.
@@ -36,6 +47,7 @@ INSTRUCTIONS = """\
 - Add a **Research Note** to record your own thoughts for future reference.
 - Use **← Prev / Next →** to browse entries, or **Jump to Next Unreviewed** to skip ahead.
 - Focus on flagged entries and those marked "Yes" — you don't need to review everything.
+- **Document Type** applies to the whole file — set it once per document and click **Save Document Type**.
 """
 
 # ─── Pure Helper Functions ────────────────────────────────────────────────────
@@ -143,8 +155,23 @@ def recalculate_statistics(data: dict) -> None:
     ]
 
 
+_KNOWN_CATEGORIES = set(c for c in CATEGORIES if c and c != "other")
+_KNOWN_DOC_TYPES = set(d for d in DOCUMENT_TYPES if d != "other")
+
+
+def _resolve_doc_type(dt_raw: str) -> tuple:
+    """Return (dropdown_value, gr.update for custom textbox) from a raw document_type string."""
+    dt_raw = (dt_raw or "").strip()
+    if dt_raw in _KNOWN_DOC_TYPES:
+        return dt_raw, gr.update(visible=False, value="")
+    elif dt_raw and dt_raw != "other":
+        return "other", gr.update(visible=True, value=dt_raw)
+    else:
+        return dt_raw or "session_laws", gr.update(visible=False, value="")
+
+
 def entry_to_display_values(data: dict, sorted_ids: list, idx: int) -> tuple:
-    """Return a 16-tuple of raw display values for the entry at sorted_ids[idx].
+    """Return a 17-tuple of raw display values for the entry at sorted_ids[idx].
 
     Index  Field
     -----  -----
@@ -161,13 +188,14 @@ def entry_to_display_values(data: dict, sorted_ids: list, idx: int) -> tuple:
     10     keywords (comma-joined)
     11     racial_indicator
     12     reasoning
-    13     is_jim_crow  ← dropdown value (str)
-    14     category     ← dropdown value (str, "" for None)
-    15     reviewer_note
+    13     is_jim_crow     ← dropdown value (str)
+    14     category        ← dropdown value (str, "" for None, "other" if custom)
+    15     category_custom ← custom text when category == "other"
+    16     reviewer_note
     """
     entries_by_id = build_entry_index(data.get("entries", []))
     if not sorted_ids or not (0 <= idx < len(sorted_ids)):
-        return ("", "", "", "", "", "", "", "", "", "", "", "", "", "no", "", "")
+        return ("", "", "", "", "", "", "", "", "", "", "", "", "", "no", "", "", "")
 
     entry = entries_by_id.get(sorted_ids[idx], {})
     cls = entry.get("classification", {})
@@ -194,6 +222,15 @@ def entry_to_display_values(data: dict, sorted_ids: list, idx: int) -> tuple:
     else:
         badge = ""
 
+    # Resolve category: known value → dropdown, unknown → "other" + custom text
+    cat_raw = cls.get("category") or ""
+    if cat_raw in _KNOWN_CATEGORIES:
+        cat_dd, cat_custom = cat_raw, ""
+    elif cat_raw and cat_raw != "other":
+        cat_dd, cat_custom = "other", cat_raw
+    else:
+        cat_dd, cat_custom = cat_raw, ""
+
     return (
         entry.get("entry_id", ""),
         entry.get("source_filename", ""),
@@ -209,33 +246,43 @@ def entry_to_display_values(data: dict, sorted_ids: list, idx: int) -> tuple:
         cls.get("racial_indicator", ""),
         cls.get("reasoning", ""),
         cls.get("is_jim_crow", "no"),
-        cls.get("category") or "",
+        cat_dd,
+        cat_custom,
         entry.get("reviewer_note", ""),
     )
 
 
 def make_display_tuple(data: dict, sorted_ids: list, idx: int) -> tuple:
-    """Wrap entry_to_display_values, replacing the raw category string (index 14)
-    with a gr.update that also sets interactivity based on is_jim_crow.
+    """Wrap entry_to_display_values, applying gr.update for interactive/visible fields.
+
+    Indices modified:
+      14 (category)        → gr.update with interactivity based on is_jim_crow
+      15 (category_custom) → gr.update with visibility based on category
     """
     vals = list(entry_to_display_values(data, sorted_ids, idx))
     is_jc = vals[13]
     cat_val = vals[14]
+    cat_custom = vals[15]
+
     if is_jc == "no":
         vals[14] = gr.update(interactive=False, value="")
+        vals[15] = gr.update(visible=False, value="")
     else:
         vals[14] = gr.update(interactive=True, value=cat_val)
-    return tuple(vals)
+        vals[15] = gr.update(visible=(cat_val == "other"), value=cat_custom)
+
+    return tuple(vals)  # 17 values
 
 
 def _empty_displays() -> tuple:
-    """16-tuple of blank/default display values."""
+    """17-tuple of blank/default display values (entry level)."""
     return (
-        "", "", "", "", "", "", "",   # entry_id … ocr_text
-        "", "", "", "", "", "",       # title … reasoning
-        "no",                         # is_jim_crow
-        gr.update(interactive=True, value=""),  # category
-        "",                           # reviewer_note
+        "", "", "", "", "", "", "",            # entry_id … ocr_text
+        "", "", "", "", "", "",                # title … reasoning
+        "no",                                  # is_jim_crow
+        gr.update(interactive=True, value=""), # category
+        gr.update(visible=False, value=""),    # category_custom
+        "",                                    # reviewer_note
     )
 
 
@@ -244,11 +291,30 @@ def _empty_displays() -> tuple:
 _INIT_STATE = {"file_path": None, "data": None, "sorted_ids": [], "current_idx": 0}
 
 
-def _pack(display_16: tuple, entries: list, state: dict, status: str) -> tuple:
-    """Assemble the full 20-item return tuple that maps to all_outputs."""
+def _pack(
+    display_17: tuple,
+    doc_type_dd_val: str,
+    doc_type_custom_val,
+    entries: list,
+    state: dict,
+    status: str,
+) -> tuple:
+    """Assemble the full 23-item return tuple that maps to all_outputs.
+
+    all_outputs order:
+      0-16   display_17 (entry level)
+      17     doc_type_dd
+      18     doc_type_custom_box
+      19     progress_md
+      20     complete_banner
+      21     state
+      22     status_msg
+    """
     progress_text, show_banner = build_progress_text(entries)
     return (
-        *display_16,
+        *display_17,
+        doc_type_dd_val,
+        doc_type_custom_val,
         progress_text,
         gr.update(visible=show_banner),
         state,
@@ -260,6 +326,7 @@ def load_file(filename: str, state: dict) -> tuple:
     if not filename or str(filename).startswith("No result"):
         return (
             *_empty_displays(),
+            "session_laws", gr.update(visible=False, value=""),
             "No file selected.",
             gr.update(visible=False),
             {**_INIT_STATE},
@@ -273,6 +340,7 @@ def load_file(filename: str, state: dict) -> tuple:
     except (OSError, json.JSONDecodeError) as exc:
         return (
             *_empty_displays(),
+            "session_laws", gr.update(visible=False, value=""),
             "Error loading file.",
             gr.update(visible=False),
             {**_INIT_STATE},
@@ -280,6 +348,9 @@ def load_file(filename: str, state: dict) -> tuple:
         )
 
     entries = data.get("entries", [])
+    dt_raw = (data.get("source_document") or {}).get("document_type") or ""
+    dt_dd, dt_custom = _resolve_doc_type(dt_raw)
+
     if not entries:
         new_state = {
             "file_path": str(file_path), "data": data,
@@ -287,6 +358,7 @@ def load_file(filename: str, state: dict) -> tuple:
         }
         return (
             *_empty_displays(),
+            dt_dd, dt_custom,
             "0 / 0 entries reviewed  |  No entries found",
             gr.update(visible=False),
             new_state,
@@ -300,9 +372,9 @@ def load_file(filename: str, state: dict) -> tuple:
         "sorted_ids": sorted_ids,
         "current_idx": 0,
     }
-    display_16 = make_display_tuple(data, sorted_ids, 0)
+    display_17 = make_display_tuple(data, sorted_ids, 0)
     n = len(sorted_ids)
-    return _pack(display_16, entries, new_state,
+    return _pack(display_17, dt_dd, dt_custom, entries, new_state,
                  f"Loaded {n} entries from {filename}. Entry 1 of {n}.")
 
 
@@ -311,9 +383,13 @@ def navigate(direction: str, state: dict) -> tuple:
     sorted_ids = state.get("sorted_ids", [])
     idx = state.get("current_idx", 0)
 
+    dt_raw = (data.get("source_document") or {}).get("document_type") or "" if data else ""
+    dt_dd, dt_custom = _resolve_doc_type(dt_raw)
+
     if not data or not sorted_ids:
         return (
             *_empty_displays(),
+            dt_dd, dt_custom,
             "No file loaded.",
             gr.update(visible=False),
             state,
@@ -333,12 +409,10 @@ def navigate(direction: str, state: dict) -> tuple:
 
     elif direction == "unreviewed":
         new_idx = None
-        # Search forward from idx + 1
         for i in range(idx + 1, n):
             if not entries_by_id.get(sorted_ids[i], {}).get("reviewed", False):
                 new_idx = i
                 break
-        # Wrap around from beginning if nothing found ahead
         if new_idx is None:
             for i in range(0, idx):
                 if not entries_by_id.get(sorted_ids[i], {}).get("reviewed", False):
@@ -355,13 +429,14 @@ def navigate(direction: str, state: dict) -> tuple:
         status = f"Entry {new_idx + 1} of {n}."
 
     state["current_idx"] = new_idx
-    display_16 = make_display_tuple(data, sorted_ids, new_idx)
-    return _pack(display_16, data.get("entries", []), state, status)
+    display_17 = make_display_tuple(data, sorted_ids, new_idx)
+    return _pack(display_17, dt_dd, dt_custom, data.get("entries", []), state, status)
 
 
 def save_review(
     is_jim_crow: str,
     category: str,
+    category_custom: str,
     reviewer_note: str,
     state: dict,
 ) -> tuple:
@@ -370,9 +445,13 @@ def save_review(
     idx = state.get("current_idx", 0)
     file_path = state.get("file_path")
 
+    dt_raw = (data.get("source_document") or {}).get("document_type") or "" if data else ""
+    dt_dd, dt_custom = _resolve_doc_type(dt_raw)
+
     if not data or not sorted_ids or not file_path:
         return (
             *_empty_displays(),
+            dt_dd, dt_custom,
             "No file loaded.",
             gr.update(visible=False),
             state,
@@ -385,14 +464,20 @@ def save_review(
     if not entry:
         return (
             *_empty_displays(),
+            dt_dd, dt_custom,
             "Error.",
             gr.update(visible=False),
             state,
             "Entry not found.",
         )
 
-    # Force category to None when is_jim_crow is "no"
-    effective_category = None if is_jim_crow == "no" else (category or None)
+    # Resolve category: use custom text when "other" and custom is non-empty
+    if is_jim_crow == "no":
+        effective_category = None
+    elif category == "other" and category_custom.strip():
+        effective_category = category_custom.strip()
+    else:
+        effective_category = category or None
 
     # Mutate entry in place
     entry["classification"]["is_jim_crow"] = is_jim_crow
@@ -411,15 +496,63 @@ def save_review(
         status = f"Error saving: {exc}"
 
     entries = data.get("entries", [])
-    display_16 = make_display_tuple(data, sorted_ids, idx)
-    return _pack(display_16, entries, state, status)
+    display_17 = make_display_tuple(data, sorted_ids, idx)
+    return _pack(display_17, dt_dd, dt_custom, entries, state, status)
 
 
-def toggle_category_interactivity(is_jim_crow: str):
-    """Disable + clear category when 'no'; re-enable (without restoring) otherwise."""
+def save_doc_type(
+    document_type: str,
+    document_type_custom: str,
+    state: dict,
+) -> tuple:
+    """Save document_type to source_document. Returns (state, status_msg)."""
+    data = state.get("data")
+    file_path = state.get("file_path")
+
+    if not data or not file_path:
+        return state, "No file loaded."
+
+    effective = (
+        document_type_custom.strip()
+        if document_type == "other" and document_type_custom.strip()
+        else document_type
+    )
+
+    if "source_document" not in data:
+        data["source_document"] = {}
+    data["source_document"]["document_type"] = effective
+
+    try:
+        with open(file_path, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2, ensure_ascii=False)
+        status = f"Document type saved: {effective}"
+    except OSError as exc:
+        status = f"Error saving: {exc}"
+
+    return state, status
+
+
+def toggle_category_on_jim_crow(is_jim_crow: str):
+    """Disable + clear category (and custom) when 'no'; re-enable otherwise."""
     if is_jim_crow == "no":
-        return gr.update(interactive=False, value="")
-    return gr.update(interactive=True)
+        return (
+            gr.update(interactive=False, value=""),
+            gr.update(visible=False, value=""),
+        )
+    return (
+        gr.update(interactive=True),
+        gr.update(visible=False),
+    )
+
+
+def toggle_category_custom(category: str):
+    """Show custom text input when 'other' is selected."""
+    return gr.update(visible=(category == "other"), value="")
+
+
+def toggle_document_type_custom(document_type: str):
+    """Show custom text input when 'other' is selected."""
+    return gr.update(visible=(document_type == "other"), value="")
 
 
 # ─── UI Layout ────────────────────────────────────────────────────────────────
@@ -463,8 +596,26 @@ def build_ui() -> gr.Blocks:
         )
 
         # ── Instructions ──────────────────────────────────────────────────────
-        with gr.Accordion("Reviewer Instructions:", open=True):
+        with gr.Accordion("Reviewer Instructions:", open=False):
             gr.Markdown(INSTRUCTIONS)
+
+        # ── Document Type (document-level, set once per file) ─────────────────
+        with gr.Group():
+            gr.Markdown("**Document Type** *(applies to the whole document)*")
+            with gr.Row():
+                doc_type_dd = gr.Dropdown(
+                    choices=DOCUMENT_TYPES,
+                    label="Document Type",
+                    show_label=False,
+                    value="session_laws",
+                    scale=3,
+                )
+                save_doc_type_btn = gr.Button("Save Document Type", scale=1)
+            doc_type_custom_box = gr.Textbox(
+                label="Document Type (specify)",
+                placeholder="Enter a custom document type...",
+                visible=False,
+            )
 
         # ── Main workspace ────────────────────────────────────────────────────
         with gr.Row():
@@ -529,6 +680,11 @@ def build_ui() -> gr.Blocks:
                         label="Category",
                         value="",
                     )
+                    category_custom_box = gr.Textbox(
+                        label="Category (specify)",
+                        placeholder="Enter a custom category...",
+                        visible=False,
+                    )
                     reviewer_note_box = gr.Textbox(
                         label="Research Notes",
                         lines=3,
@@ -546,12 +702,15 @@ def build_ui() -> gr.Blocks:
 
         # ── Output list — order MUST match _pack() return tuple ───────────────
         all_outputs = [
-            # display_16
+            # display_17 (entry level)
             entry_id_box, source_file_box, page_box, year_box,
             citation_box, badge_html, ocr_text_box,
             title_box, confidence_box, summary_box,
             keywords_box, racial_indicator_box, reasoning_box,
-            is_jim_crow_dd, category_dd, reviewer_note_box,
+            is_jim_crow_dd, category_dd, category_custom_box,
+            reviewer_note_box,
+            # document-level
+            doc_type_dd, doc_type_custom_box,
             # progress + state
             progress_md, complete_banner,
             state, status_msg,
@@ -574,8 +733,14 @@ def build_ui() -> gr.Blocks:
 
         save_btn.click(
             fn=save_review,
-            inputs=[is_jim_crow_dd, category_dd, reviewer_note_box, state],
+            inputs=[is_jim_crow_dd, category_dd, category_custom_box, reviewer_note_box, state],
             outputs=all_outputs,
+        )
+
+        save_doc_type_btn.click(
+            fn=save_doc_type,
+            inputs=[doc_type_dd, doc_type_custom_box, state],
+            outputs=[state, status_msg],
         )
 
         prev_btn.click(
@@ -595,9 +760,21 @@ def build_ui() -> gr.Blocks:
         )
 
         is_jim_crow_dd.change(
-            fn=toggle_category_interactivity,
+            fn=toggle_category_on_jim_crow,
             inputs=[is_jim_crow_dd],
-            outputs=[category_dd],
+            outputs=[category_dd, category_custom_box],
+        )
+
+        category_dd.change(
+            fn=toggle_category_custom,
+            inputs=[category_dd],
+            outputs=[category_custom_box],
+        )
+
+        doc_type_dd.change(
+            fn=toggle_document_type_custom,
+            inputs=[doc_type_dd],
+            outputs=[doc_type_custom_box],
         )
 
     return demo
