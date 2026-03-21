@@ -231,10 +231,17 @@ def aggregate_results(entries: List[StatuteEntry], source: dict) -> dict:
         if e.classification.needs_human_review
     ]
 
+    # Strip document_type from individual entries — it lives only on source_document
+    entries_dump = []
+    for e in entries:
+        d = e.model_dump()
+        d["classification"].pop("document_type", None)
+        entries_dump.append(d)
+
     return {
         "source_document": source,
         "processed_at": datetime.now(timezone.utc).isoformat(),
-        "entries": [e.model_dump() for e in entries],
+        "entries": entries_dump,
         "human_review_queue": human_review_queue,
         "statistics": {
             "total_sections": len(entries),
