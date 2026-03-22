@@ -115,7 +115,7 @@ Output: `doc_processing_results/{filename}_classified.json`
 
 ```json
 {
-  "source_document": { "filename": "...", "year": 1865 },
+  "source_document": { "filename": "...", "year": 1865, "document_type": "session_laws" },
   "entries": [
     {
       "entry_id": "gen_assemb_1865_p87_s1",
@@ -136,6 +136,8 @@ Output: `doc_processing_results/{filename}_classified.json`
   "statistics": { "total_sections": 24, "classified_jim_crow": 3, ... }
 }
 ```
+
+`document_type` is inferred by the LLM from the document text and stored once on `source_document` (not per entry). Valid values: `session_laws`, `constitution`, `state_constitution`, `amendments`, `codes`, `criminal_laws`, `civil_laws`, `other`. Reviewers can correct it in the UI.
 
 Entries flagged `needs_human_review: true` (ambiguous cases or confidence < 0.7) are also listed separately in `human_review_queue`.
 
@@ -163,8 +165,10 @@ Opens at `http://localhost:7860` in your browser.
 
 - Loads any classified JSON file from `doc_processing_results/`
 - Shows entries in priority order: flagged (`needs_human_review`) first, then `is_jim_crow=yes`, then the rest
-- Lets you correct `is_jim_crow` (yes / no / ambiguous) and `category`, leave a free-text note, and save
-- Saves corrections back to the same JSON file immediately on each "Save Review" click
+- Lets you correct `is_jim_crow` (yes / no / ambiguous) and `category` per entry, leave a free-text note, and save
+- Lets you set the **document type** once per document (stored on `source_document`) via a dedicated selector and "Save Document Type" button; selecting "other" reveals a free-text field for custom types
+- Both `category` and `document_type` accept custom free-text values via an "other" option
+- Saves corrections back to the same JSON file immediately on each save click
 - Tracks progress with a live counter: overall entries reviewed and priority entries remaining
 
 ### What "reviewed" means for a file
