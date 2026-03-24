@@ -1,285 +1,301 @@
-# PostgreSQL Database Setup Guide
+# Jim Crow Laws Database — Setup & Usage Guide
 
-## 🚀 Complete Step-by-Step Setup (5 Minutes)
+This guide covers everything needed to get the project running from scratch: installing dependencies, starting the database, loading data, and accessing the website.
 
-This guide will help you set up a complete PostgreSQL database for the Jim Crow Laws project using Docker. The database will be ready with all necessary tables and sample data.
+---
 
-### What You'll Get:
-- **PostgreSQL 16** database with Jim Crow Laws schema
-- **PgAdmin** web interface for easy database management
-- **Automatic initialization** with tables and sample data
-- **Persistent data** that survives container restarts
+## 📋 Prerequisites — What to Download First
 
-### Step 1: Install Prerequisites
+Before doing anything else, install these tools:
 
-**Before starting, make sure you have:**
-1. **Docker Desktop** installed and running
-   - Download from: https://www.docker.com/products/docker-desktop
-   - After installation, make sure Docker Desktop is running (look for whale icon in system tray)
-   - **Test Docker:** Open terminal and run `docker --version` - you should see version info
-2. **Git** installed (to clone the repository)
-3. **VS Code** installed (recommended for viewing database)
+### 1. Docker Desktop
+The database runs inside Docker so you don't need to install PostgreSQL manually.
+- Download from: https://www.docker.com/products/docker-desktop
+- Install and **launch Docker Desktop** — you must see the whale icon in your system tray before continuing
+- Verify it works: open a terminal and run `docker --version`
 
-### Step 2: Get the Project Files
+### 2. Python 3.11 or newer
+The API server and data import scripts are written in Python.
+- Download from: https://www.python.org/downloads/
+- During installation on Windows, **check "Add Python to PATH"**
+- Verify: `python --version`
 
-1. **Make sure you have all project files** including:
-   - `docker-compose.yml` (Docker configuration)
-   - `.env` (Environment variables with passwords)
-   - `init-scripts/01-init-database.sql` (Database schema)
-   
-2. **Open terminal/command prompt** in the project folder
-   - **Windows:** Right-click in the folder → "Open in Terminal" or "Open PowerShell window here"
-   - **Mac/Linux:** Open Terminal and `cd` to the project folder
+### 3. Git
+- Download from: https://git-scm.com/downloads
+- Verify: `git --version`
 
-### Step 3: Configure Environment (Optional)
+---
 
-The `.env` file already has working defaults, but you can customize:
+## 🗂️ Step 1 — Get the Project Files
+
+Clone the repository and open a terminal inside the project folder:
+
+```bash
+git clone <repository-url>
+cd CS499_JimCrowLaws
+```
+
+You should see these key files:
+```
+docker-compose.yml       ← Docker database configuration
+.env                     ← Database credentials (do not commit this)
+init-scripts/            ← SQL that auto-runs when the DB is first created
+api_server.py            ← Flask API server (serves the website + handles searches)
+import_classified.py     ← Script to load classified laws into the database
+index.html               ← The frontend website
+doc_processing_results/  ← Classified JSON output from the LLM pipeline
+```
+
+---
+
+## 🔑 Step 2 — Configure the Environment File
+
+Copy the example env file and fill in your credentials:
+
+```bash
+cp .env.example .env
+```
+
+Open `.env` and set the values — the defaults below will work for local development:
 
 ```env
 POSTGRES_DB=jimcrow_laws
 POSTGRES_USER=jimcrow_user
 POSTGRES_PASSWORD=JimCrow@1965
 POSTGRES_PORT=5432
+
 PGADMIN_EMAIL=admin@jimcrow.dev
 PGADMIN_PASSWORD=admin123
 PGADMIN_PORT=8080
+
+DATABASE_URL=postgresql://jimcrow_user:JimCrow@1965@localhost:5432/jimcrow_laws
 ```
 
-**For production:** Change the passwords to something more secure.
-
-### Step 4: Start the Database System
-
-1. **In your terminal, run this command:**
-   ```bash
-   docker-compose up -d
-   ```
-
-2. **What happens next:**
-   - Docker downloads PostgreSQL and PgAdmin images (first time only)
-   - Creates and starts both containers
-   - Automatically runs the initialization script
-   - Sets up the database schema with tables and sample data
-
-3. **Wait about 1-2 minutes** for everything to initialize
-
-4. **Verify it's running:**
-   ```bash
-   docker-compose ps
-   ```
-   You should see both `jimcrow_db` and `jimcrow_pgadmin` with status "Up" and "healthy"
-
-### Step 5: Access Your Database
-
-You now have **TWO ways** to access your database:
-
-## 🎯 Method 1: PgAdmin Web Interface (Easiest for Beginners)
-
-1. **Open your web browser** and go to: http://localhost:8080
-
-2. **Login to PgAdmin:**
-   - Email: `admin@jimcrow.dev`
-   - Password: `admin123`
-
-3. **Connect to your database:**
-   - Right-click "Servers" → "Register" → "Server"
-   - **General Tab:** Name: `Jim Crow Laws DB`
-   - **Connection Tab:**
-     - Host: `postgres` (this is the Docker container name)
-     - Port: `5432`
-     - Database: `jimcrow_laws`
-     - Username: `jimcrow_user`
-     - Password: `JimCrow@1965`
-
-4. **Explore your database:**
-   - Expand the server → Databases → jimcrow_laws → Schemas → public → Tables
-   - You'll see: `legal_documents`, `document_classifications`, `extracted_entities`
-   - Right-click any table → "View/Edit Data" → "All Rows" to see data
-
-## 🎯 Method 2: VS Code Extensions (Great for Development)
-
-1. **Install PostgreSQL Extension in VS Code:**
-   - Open VS Code
-   - Click Extensions icon (or press `Ctrl+Shift+X`)
-   - Search for "PostgreSQL" 
-   - Install the one by "Chris Kolkman"
-
-2. **Connect to Database:**
-   - Press `Ctrl+Shift+P` to open Command Palette
-   - Type "PostgreSQL: New Connection"
-   - Enter these details **exactly**:
-     - **Host:** `localhost`
-     - **Port:** `5432`
-     - **Database:** `jimcrow_laws`
-     - **Username:** `jimcrow_user`
-     - **Password:** `JimCrow@1965`
-
-3. **View Your Database:**
-   - Click the PostgreSQL icon in VS Code sidebar
-   - Expand the connection to see your database
-   - You can now run SQL queries, view data, and manage tables!
-
-## 🎯 Method 3: Command Line (For Advanced Users)
-
-1. **Access database directly:**
-   ```bash
-   docker-compose exec postgres psql -U jimcrow_user -d jimcrow_laws
-   ```
-
-2. **Try these commands:**
-   ```sql
-   \l                          -- List all databases
-   \d                          -- List all tables
-   SELECT * FROM legal_documents;  -- View sample data
-   \d legal_documents          -- Show table structure
-   \q                          -- Quit
-   ```
+> ⚠️ The `.env` file is listed in `.gitignore` — never commit it to Git as it contains passwords.
 
 ---
 
-## 📊 Database Schema Overview
+## 🐍 Step 3 — Set Up the Python Environment
 
-Your database includes these main tables:
+Create and activate a virtual environment, then install the required packages:
 
-### `legal_documents`
-- Stores the full text and metadata of legal documents
-- Includes OCR confidence scores, dates, jurisdiction info
-- Full-text search enabled
+```bash
+# Create the virtual environment
+python -m venv .venv
 
-### `document_classifications`
-- Stores AI-powered classifications of documents
-- Links to legal_documents with confidence scores
-- Tracks which model made each classification
+# Activate it (Windows PowerShell)
+.venv\Scripts\Activate.ps1
 
-### `extracted_entities`
-- Stores extracted entities (people, places, dates, etc.)
-- Position information for highlighting in documents
-- Confidence scores for each extraction
+# Activate it (Windows Command Prompt)
+.venv\Scripts\activate.bat
+
+# Activate it (Mac/Linux)
+source .venv/bin/activate
+```
+
+Install dependencies:
+
+```bash
+pip install flask flask-cors psycopg2-binary python-dotenv
+```
 
 ---
 
-## ⚡ Quick Commands Reference
+## 🐘 Step 4 — Start the Database
 
-| Task | Command |
-|------|---------|
-| **Start database** | `docker-compose up -d` |
-| **Stop database** | `docker-compose down` |
-| **Check status** | `docker-compose ps` |
-| **View logs** | `docker-compose logs postgres` |
-| **Access SQL prompt** | `docker-compose exec postgres psql -U jimcrow_user -d jimcrow_laws` |
-| **Restart database** | `docker-compose restart postgres` |
-| **Remove everything** | `docker-compose down -v` (⚠️ Deletes all data!) |
+Make sure Docker Desktop is running, then start the PostgreSQL container:
+
+```bash
+docker-compose up -d postgres
+```
+
+Wait about 30 seconds for it to initialize, then verify it is healthy:
+
+```bash
+docker-compose ps
+```
+
+You should see `jimcrow_db` with status **Up (healthy)**.
+
+> The `init-scripts/01-init-database.sql` file runs automatically the **first time** the container starts and creates all the necessary tables.
+
+---
+
+## 📥 Step 5 — Load the Jim Crow Laws Data
+
+With the database running, import the classified law data:
+
+```bash
+python import_classified.py
+```
+
+This reads from `doc_processing_results/classified_results.json` and inserts **only the entries classified as Jim Crow laws** (`is_jim_crow = "yes"`) into the database. All non-Jim Crow entries are excluded.
+
+You should see output like:
+
+```
+Loading: ...\classified_results.json
+  Found 24 total entries, 7 classified as Jim Crow laws from: Acts Passed at the Session...
+Clearing existing data...
+  [01] yes       | Establishment of Common Schools for Colored Children
+  [02] yes       | Separate Schools for White and Colored Children
+  ...
+Done. Inserted 7 entries total.
+```
+
+> **Adding new data later:** When new documents are processed through the LLM pipeline and produce a new `_classified.json` file, run:
+> ```bash
+> python import_classified.py path/to/new_classified.json
+> ```
+> Note: the script currently clears and reloads all data on each run. If you are loading multiple files, run the import once per file but be aware that each run wipes the previous import — this will be updated as the dataset grows.
+
+---
+
+## 🚀 Step 6 — Start the API Server
+
+This starts the Flask server that serves both the website and the database search API:
+
+```bash
+python api_server.py
+```
+
+You should see:
+
+```
+✓ Database connection successful
+Server will run at: http://localhost:5000
+ * Running on http://127.0.0.1:5000
+```
+
+---
+
+## 🌐 Step 7 — Open the Website
+
+Open your browser and go to:
+
+**http://localhost:5000**
+
+You will see the Jim Crow Laws Database search interface. You can:
+- Search by keyword across law titles, text, and summaries
+- Filter by category (Education, Marriage, etc.)
+- Filter by year range
 
 ---
 
 ## 🔄 Daily Workflow
 
-**Starting work:**
+Every time you come back to work on the project:
+
 ```bash
-docker-compose up -d
+# 1. Start Docker database
+docker-compose up -d postgres
+
+# 2. Activate your Python environment
+.venv\Scripts\Activate.ps1      # Windows PowerShell
+# or
+source .venv/bin/activate        # Mac/Linux
+
+# 3. Start the API server
+python api_server.py
+
+# 4. Open browser to http://localhost:5000
 ```
 
-**Stopping work:**
+When you are done:
+
 ```bash
+# Stop the API server
+Ctrl+C
+
+# Stop the database
 docker-compose down
 ```
 
-**Your data is automatically saved** between sessions!
+Your data is saved in a Docker volume and will still be there next time.
+
+---
+
+## 📊 Database Schema
+
+All Jim Crow law records are stored in the `legal_documents` table with these key columns:
+
+| Column | Description |
+|--------|-------------|
+| `id` | Unique UUID for each record |
+| `title` | Law title (generated by LLM) |
+| `year` | Year the law was enacted |
+| `citation` | Full source citation |
+| `category` | Law category (education, marriage, voting, etc.) |
+| `summary` | 1–2 sentence LLM-generated summary |
+| `keywords` | Array of relevant keywords |
+| `full_text` | Original OCR text of the statute |
+| `is_jim_crow` | Classification result — always `yes` in this DB |
+| `confidence` | LLM confidence score (0.0–1.0) |
+| `racial_indicator` | `explicit`, `implicit`, or `none` |
+| `needs_human_review` | Flagged for manual review |
+| `reasoning` | LLM chain-of-thought explanation |
+| `source_file` | Original PDF filename |
+| `page_number` | Page number in the source document |
+
+---
+
+## 🔍 Inspecting the Database Directly
+
+You can query the database from the command line at any time:
+
+```bash
+# Open a SQL prompt
+docker-compose exec postgres psql -U jimcrow_user -d jimcrow_laws
+
+# Useful queries once inside:
+SELECT title, year, category FROM legal_documents;   -- list all laws
+\d legal_documents                                    -- show table structure
+\q                                                    -- quit
+```
+
+Or use PgAdmin in the browser at **http://localhost:8080**:
+- Email: `admin@jimcrow.dev`
+- Password: `admin123`
+- Connect to host `postgres`, port `5432`, database `jimcrow_laws`, user `jimcrow_user`
+
+---
+
+## ⚡ Quick Reference
+
+| Task | Command |
+|------|---------|
+| Start database | `docker-compose up -d postgres` |
+| Stop database | `docker-compose down` |
+| Check DB status | `docker-compose ps` |
+| Load/reload law data | `python import_classified.py` |
+| Load a specific file | `python import_classified.py path/to/file.json` |
+| Start the web server | `python api_server.py` |
+| Open the website | http://localhost:5000 |
+| Open PgAdmin | http://localhost:8080 |
+| View DB logs | `docker-compose logs postgres` |
+| Full reset (⚠️ deletes all data) | `docker-compose down -v` then `docker-compose up -d postgres` |
 
 ---
 
 ## 🆘 Troubleshooting
 
-### "Can't connect to database"
-1. Check Docker Desktop is running (whale icon in system tray)
-2. Verify containers are running: `docker-compose ps`
-3. If not running: `docker-compose up -d`
-4. Check logs: `docker-compose logs postgres`
+### "localhost refused to connect" on http://localhost:5000
+The API server is not running. Run `python api_server.py` in your terminal.
 
-### "Port already in use" Error
-```
-Error: port 5432 already in use
-```
-**Solution:** Either:
-1. Stop other PostgreSQL services running on your computer
-2. Or change the port in `.env` file: `POSTGRES_PORT=5433`
+### "Error connecting to database" on the website
+Either the database container is not running (`docker-compose up -d postgres`) or the API server lost its connection — restart `api_server.py`.
 
 ### "Password authentication failed"
-1. Double-check the password in your `.env` file
-2. Make sure you're using the exact password when connecting
-3. Try restarting: `docker-compose down` then `docker-compose up -d`
+Check that your `.env` file has the correct credentials and that the database was started **after** the `.env` file was in place.
 
-### Database won't start
-1. Check Docker Desktop is running
-2. Check available disk space (Docker needs space)
-3. View detailed logs: `docker-compose logs postgres`
-4. Try rebuilding: `docker-compose down -v` then `docker-compose up -d`
+### "Port 5432 already in use"
+Another PostgreSQL instance is running on your machine. Either stop it, or change `POSTGRES_PORT=5433` in `.env` and restart with `docker-compose down` then `docker-compose up -d postgres`.
 
-### PgAdmin won't load
-1. Check if PgAdmin container is running: `docker-compose ps`
-2. Try accessing: http://localhost:8080
-3. Check logs: `docker-compose logs pgadmin`
+### "Port 5000 already in use"
+A previous API server process is still running. Find and close it, or restart your terminal.
 
----
-
-## 👥 For Team Members
-
-**If you're joining this project:**
-
-1. **Get the complete project folder** from your team lead
-2. **Make sure you have these files:**
-   - `docker-compose.yml`
-   - `.env` (with the correct passwords)
-   - `init-scripts/01-init-database.sql`
-3. **Follow Steps 1-5 above**
-4. **You're done!** Everyone has the same database setup
-
-**⚠️ Important Security Notes:**
-- Never commit the `.env` file to Git (it contains passwords)
-- For production, use stronger passwords
-- The `.env` file is already in `.gitignore`
-
----
-
-## 🚀 Advanced Features
-
-### Adding New Tables
-1. Create new `.sql` files in `init-scripts/` folder
-2. Name them with numbers: `02-your-new-tables.sql`
-3. Restart the database: `docker-compose down -v && docker-compose up -d`
-
-### Backing Up Data
-```bash
-# Create backup
-docker-compose exec postgres pg_dump -U jimcrow_user jimcrow_laws > backup.sql
-
-# Restore backup
-docker-compose exec -T postgres psql -U jimcrow_user jimcrow_laws < backup.sql
-```
-
-### Connecting Your Python Code
-Use this connection string in your Python applications:
-```python
-DATABASE_URL = "postgresql://jimcrow_user:JimCrow@1965@localhost:5432/jimcrow_laws"
-```
-
----
-
-## 📝 Setup Complete!
-
-If you followed this guide, your database should now be running with:
-- ✅ **PostgreSQL 16** container running and healthy
-- ✅ **PgAdmin** web interface accessible at http://localhost:8080
-- ✅ **Database schema** with 3 tables: `legal_documents`, `document_classifications`, `extracted_entities`
-- ✅ **Sample data** inserted for testing
-- ✅ **Full-text search** and indexing configured
-
-**Test your setup:**
-```bash
-docker-compose ps  # Should show both containers as "Up" and "healthy"
-```
-
-**Quick verification:**
-```bash
-# View your sample data
-docker-compose exec postgres psql -U jimcrow_user -d jimcrow_laws -c "SELECT title FROM legal_documents;"
-```
+### Database container won't start
+1. Make sure Docker Desktop is open and running
+2. Check disk space
+3. View logs: `docker-compose logs postgres`
+4. Full reset: `docker-compose down -v` then `docker-compose up -d postgres`, then re-run `python import_classified.py`
