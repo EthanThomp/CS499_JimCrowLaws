@@ -75,6 +75,7 @@ def import_classified_results(json_path: Path):
                 %s, %s, %s, %s, %s,
                 %s, %s
             )
+            ON CONFLICT (entry_id) DO NOTHING
             """,
             (
                 c.get('title') or entry['entry_id'],
@@ -96,9 +97,12 @@ def import_classified_results(json_path: Path):
                 c.get('reasoning'),
             ),
         )
-        inserted += 1
-        status = c.get('is_jim_crow', '?')
-        print(f"  [{inserted:02d}] {status:9s} | {c.get('title', entry['entry_id'])[:70]}")
+        if cur.rowcount > 0:
+            inserted += 1
+            status = c.get('is_jim_crow', '?')
+            print(f"  [{inserted:02d}] {status:9s} | {c.get('title', entry['entry_id'])[:70]}")
+        else:
+            print(f"  [SKIP] duplicate  | {c.get('title', entry['entry_id'])[:70]}")
 
     conn.commit()
     cur.close()
@@ -109,7 +113,8 @@ def import_classified_results(json_path: Path):
     ambiguous = sum(1 for e in entries if e['classification'].get('is_jim_crow') == 'ambiguous')
     not_jc = sum(1 for e in entries if e['classification'].get('is_jim_crow') == 'no')
 
-    print(f"\nDone. Inserted {inserted} entries total:")
+    skipped = len(entries) - inserted
+    print(f"\nDone. Inserted {inserted} new entries ({skipped} skipped as duplicates):")
     print(f"  Jim Crow (yes) : {jim_crow}")
     print(f"  Ambiguous      : {ambiguous}")
     print(f"  Not Jim Crow   : {not_jc}")

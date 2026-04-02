@@ -162,4 +162,4 @@ if __name__ == '__main__':
     print("Server will run at: http://localhost:5000")
     print("Frontend will be available at: http://localhost:5000/")
     
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True, use_reloader=False, host='0.0.0.0', port=5000)
