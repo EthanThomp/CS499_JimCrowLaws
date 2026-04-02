@@ -41,11 +41,6 @@ def import_classified_results(json_path: Path):
     conn = psycopg2.connect(**DB_CONFIG)
     cur = conn.cursor()
 
-    # Clear all existing data cleanly so we only have properly imported records.
-    # Cascade handles document_classifications and extracted_entities automatically.
-    print("Clearing existing data...")
-    cur.execute("TRUNCATE TABLE document_classifications, extracted_entities, legal_documents CASCADE")
-
     inserted = 0
     for entry in entries:
         c = entry['classification']
