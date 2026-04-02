@@ -28,6 +28,13 @@ DB_CONFIG = {
 }
 
 
+def clean(value):
+    """Strip NUL bytes that OCR sometimes embeds and psycopg2 rejects."""
+    if isinstance(value, str):
+        return value.replace('\x00', '')
+    return value
+
+
 def import_classified_results(json_path: Path):
     print(f"Loading: {json_path}")
     with open(json_path, encoding='utf-8') as f:
@@ -78,23 +85,23 @@ def import_classified_results(json_path: Path):
             ON CONFLICT (entry_id) DO NOTHING
             """,
             (
-                c.get('title') or entry['entry_id'],
-                entry.get('source_filename'),
-                source.get('document_type'),
+                clean(c.get('title') or entry['entry_id']),
+                clean(entry.get('source_filename')),
+                clean(source.get('document_type')),
                 date_enacted,
-                entry.get('ocr_text'),
-                entry.get('entry_id'),
+                clean(entry.get('ocr_text')),
+                clean(entry.get('entry_id')),
                 year,
-                entry.get('citation'),
-                c.get('category'),
-                c.get('summary'),
-                keywords,
-                c.get('is_jim_crow'),
+                clean(entry.get('citation')),
+                clean(c.get('category')),
+                clean(c.get('summary')),
+                [clean(k) for k in keywords],
+                clean(c.get('is_jim_crow')),
                 c.get('confidence'),
                 entry.get('page_number'),
-                c.get('racial_indicator'),
+                clean(c.get('racial_indicator')),
                 c.get('needs_human_review', False),
-                c.get('reasoning'),
+                clean(c.get('reasoning')),
             ),
         )
         if cur.rowcount > 0:
