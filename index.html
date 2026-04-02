@@ -52,13 +52,22 @@
             const [yearFrom, setYearFrom] = useState('1865');
             const [yearTo, setYearTo] = useState('1965');
             const [category, setCategory] = useState('all');
-            
-            // Available categories from our database
-            const categories = [
-                { value: 'all', label: 'All Categories' },
-                { value: 'education', label: 'Education' },
-                { value: 'marriage', label: 'Marriage' }
-            ];
+
+            // Dynamic categories and keywords fetched from the database
+            const [categories, setCategories] = useState([]);
+            const [allKeywords, setAllKeywords] = useState([]);
+
+            // Fetch available categories and keywords on load
+            useEffect(() => {
+                fetch('/categories')
+                    .then(r => r.json())
+                    .then(data => setCategories(data.categories || []))
+                    .catch(() => {});
+                fetch('/keywords')
+                    .then(r => r.json())
+                    .then(data => setAllKeywords(data.keywords || []))
+                    .catch(() => {});
+            }, []);
 
             // Search function that calls the backend API
             const handleSearch = async () => {
@@ -120,10 +129,16 @@
                                                 <input
                                                     type="text"
                                                     className="form-control"
+                                                    list="keyword-suggestions"
                                                     placeholder="Search in titles, content, or keywords..."
                                                     value={keyword}
                                                     onChange={(e) => setKeyword(e.target.value)}
                                                 />
+                                                <datalist id="keyword-suggestions">
+                                                    {allKeywords.map(kw => (
+                                                        <option key={kw} value={kw} />
+                                                    ))}
+                                                </datalist>
                                                 <div className="form-text">
                                                     Search across law titles, content, summaries, and keywords
                                                 </div>
@@ -135,9 +150,10 @@
                                                     value={category}
                                                     onChange={(e) => setCategory(e.target.value)}
                                                 >
+                                                    <option value="all">All Categories</option>
                                                     {categories.map((cat) => (
-                                                        <option key={cat.value} value={cat.value}>
-                                                            {cat.label}
+                                                        <option key={cat} value={cat}>
+                                                            {cat.charAt(0).toUpperCase() + cat.slice(1)}
                                                         </option>
                                                     ))}
                                                 </select>

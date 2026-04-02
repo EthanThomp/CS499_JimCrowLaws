@@ -134,6 +134,53 @@ def search_laws():
             "details": str(e)
         }), 500
 
+@app.route('/categories')
+def get_categories():
+    """Return all distinct categories present in the database"""
+    try:
+        conn = get_db_connection()
+        if not conn:
+            return jsonify({"error": "Database connection failed"}), 500
+        with conn.cursor() as cursor:
+            cursor.execute("""
+                SELECT DISTINCT category
+                FROM legal_documents
+                WHERE is_jim_crow = 'yes'
+                  AND category IS NOT NULL
+                  AND category != ''
+                ORDER BY category
+            """)
+            rows = cursor.fetchall()
+        conn.close()
+        categories = [row[0] for row in rows]
+        return jsonify({"categories": categories})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route('/keywords')
+def get_keywords():
+    """Return all distinct keywords present in the database"""
+    try:
+        conn = get_db_connection()
+        if not conn:
+            return jsonify({"error": "Database connection failed"}), 500
+        with conn.cursor() as cursor:
+            cursor.execute("""
+                SELECT DISTINCT unnest(keywords) AS keyword
+                FROM legal_documents
+                WHERE is_jim_crow = 'yes'
+                  AND keywords IS NOT NULL
+                ORDER BY keyword
+            """)
+            rows = cursor.fetchall()
+        conn.close()
+        keywords = [row[0] for row in rows]
+        return jsonify({"keywords": keywords})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
 @app.route('/health')
 def health_check():
     """Health check endpoint"""
