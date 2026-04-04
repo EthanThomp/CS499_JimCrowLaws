@@ -49,31 +49,16 @@ def search_laws():
         category = request.args.get('category', '').strip()
         year_from = request.args.get('year_from', type=int)
         year_to = request.args.get('year_to', type=int)
-        
-        # Build the SQL query — only return confirmed Jim Crow laws
-        query = """
-            SELECT 
-                id,
-                title,
-                year,
-                citation,
-                category,
-                summary,
-                keywords,
-                full_text AS ocr_text,
-                confidence,
-                racial_indicator,
-                needs_human_review,
-                page_number,
-                source_file
-            FROM legal_documents
-            WHERE is_jim_crow = 'yes'
-        """
+        page = request.args.get('page', 1, type=int)
+        limit = request.args.get('limit', 50, type=int)
+        offset = (page - 1) * limit
+
+        # Build the WHERE clause (shared by count and data queries)
+        where = "WHERE is_jim_crow = 'yes'"
         params = []
-        
-        # Keyword search across title, summary, and full text
+
         if keyword:
-            query += """ AND (
+            where += """ AND (
                 title ILIKE %s OR
                 summary ILIKE %s OR
                 full_text ILIKE %s OR
@@ -81,50 +66,66 @@ def search_laws():
             )"""
             keyword_param = f"%{keyword}%"
             params.extend([keyword_param, keyword_param, keyword_param, keyword_param])
-        
-        # Category filter
+
         if category and category != 'all':
-            query += " AND category = %s"
+            where += " AND category = %s"
             params.append(category)
-        
-        # Year range filter
+
         if year_from:
-            query += " AND year >= %s"
+            where += " AND year >= %s"
             params.append(year_from)
         if year_to:
-            query += " AND year <= %s"
+            where += " AND year <= %s"
             params.append(year_to)
-        
-        query += " ORDER BY year, page_number, id"
-        
-        # Execute the query
+
+        count_query = f"SELECT COUNT(*) FROM legal_documents {where}"
+
+        data_query = f"""
+            SELECT
+                id, title, year, citation, category, summary, keywords,
+                full_text AS ocr_text, confidence, racial_indicator,
+                needs_human_review, page_number, source_file
+            FROM legal_documents
+            {where}
+            ORDER BY year, page_number, id
+            LIMIT %s OFFSET %s
+        """
+
         conn = get_db_connection()
         if not conn:
             return jsonify({"error": "Database connection failed"}), 500
-        
+
         with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cursor:
-            cursor.execute(query, params)
+            # Get total count
+            cursor.execute(count_query, params)
+            total = cursor.fetchone()['count']
+
+            # Get paginated results
+            cursor.execute(data_query, params + [limit, offset])
             laws = cursor.fetchall()
-            
-            # Convert to list of dictionaries
+
             results = []
             for law in laws:
                 law_dict = dict(law)
-                # Ensure keywords is a list (in case it's stored differently)
                 if isinstance(law_dict.get('keywords'), str):
-                    # If keywords is stored as a string, convert to list
                     law_dict['keywords'] = [k.strip() for k in law_dict['keywords'].split(',') if k.strip()]
                 elif not isinstance(law_dict.get('keywords'), list):
                     law_dict['keywords'] = law_dict.get('keywords', []) or []
-                
                 results.append(law_dict)
-        
+
         conn.close()
-        
+
+        import math
+        total_pages = math.ceil(total / limit) if total > 0 else 1
+
         return jsonify({
             "success": True,
             "laws": results,
-            "count": len(results)
+            "count": len(results),
+            "total": total,
+            "page": page,
+            "total_pages": total_pages,
+            "limit": limit
         })
         
     except Exception as e:

@@ -46,12 +46,18 @@
             const [searchResults, setSearchResults] = useState([]);
             const [loading, setLoading] = useState(false);
             const [error, setError] = useState('');
-            
+
             // Search filters
             const [keyword, setKeyword] = useState('');
             const [yearFrom, setYearFrom] = useState('1865');
             const [yearTo, setYearTo] = useState('1965');
             const [category, setCategory] = useState('all');
+
+            // Pagination
+            const [page, setPage] = useState(1);
+            const [totalPages, setTotalPages] = useState(1);
+            const [totalCount, setTotalCount] = useState(0);
+            const LIMIT = 50;
 
             // Dynamic categories and keywords fetched from the database
             const [categories, setCategories] = useState([]);
@@ -69,28 +75,29 @@
                     .catch(() => {});
             }, []);
 
-            // Search function that calls the backend API
-            const handleSearch = async () => {
+            // Search function — accepts an explicit page number
+            const handleSearch = async (pageNum = 1) => {
                 setLoading(true);
                 setError('');
-                
+                setPage(pageNum);
+
                 try {
-                    // Build query parameters
                     const params = new URLSearchParams();
                     if (keyword) params.append('keyword', keyword);
                     if (category !== 'all') params.append('category', category);
                     if (yearFrom) params.append('year_from', yearFrom);
                     if (yearTo) params.append('year_to', yearTo);
-                    
-                    // Make API call to backend
+                    params.append('page', pageNum);
+                    params.append('limit', LIMIT);
+
                     const response = await fetch(`http://localhost:5000/search?${params.toString()}`);
-                    
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
                     const data = await response.json();
                     setSearchResults(data.laws || []);
+                    setTotalPages(data.total_pages || 1);
+                    setTotalCount(data.total || 0);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
                 } catch (err) {
                     setError('Error connecting to database. Please ensure the server is running.');
                     console.error('Search error:', err);
@@ -100,9 +107,12 @@
                 }
             };
 
+            // New search always resets to page 1
+            const handleNewSearch = () => handleSearch(1);
+
             // Initial search
             useEffect(() => {
-                handleSearch();
+                handleSearch(1);
             }, []);
 
             return (
@@ -122,7 +132,7 @@
                             <div className="card search-card">
                                 <div className="card-body">
                                     <h5 className="card-title">Search Filters</h5>
-                                    <form onSubmit={(e) => { e.preventDefault(); handleSearch(); }}>
+                                    <form onSubmit={(e) => { e.preventDefault(); handleNewSearch(); }}>
                                         <div className="row mb-3">
                                             <div className="col-md-6">
                                                 <label className="form-label">Keyword Search</label>
@@ -226,7 +236,7 @@
                     {/* Search Results */}
                     <div className="row">
                         <div className="col">
-                            <h5>Search Results ({searchResults.length} laws found)</h5>
+                            <h5>Search Results ({totalCount.toLocaleString()} laws found — page {page} of {totalPages})</h5>
                             
                             {loading ? (
                                 <div className="text-center py-5">
@@ -287,6 +297,54 @@
                                         </div>
                                     </div>
                                 ))
+                            )}
+
+                            {/* Pagination Controls */}
+                            {totalPages > 1 && !loading && (
+                                <div className="d-flex justify-content-center align-items-center gap-2 mt-4 mb-4 flex-wrap">
+                                    <button
+                                        className="btn btn-outline-primary"
+                                        disabled={page === 1}
+                                        onClick={() => handleSearch(1)}
+                                    >« First</button>
+                                    <button
+                                        className="btn btn-outline-primary"
+                                        disabled={page === 1}
+                                        onClick={() => handleSearch(page - 1)}
+                                    >‹ Prev</button>
+
+                                    {/* Page number buttons — show up to 7 around current page */}
+                                    {Array.from({ length: totalPages }, (_, i) => i + 1)
+                                        .filter(p => p === 1 || p === totalPages || Math.abs(p - page) <= 3)
+                                        .reduce((acc, p, idx, arr) => {
+                                            if (idx > 0 && p - arr[idx - 1] > 1) acc.push('...');
+                                            acc.push(p);
+                                            return acc;
+                                        }, [])
+                                        .map((p, idx) =>
+                                            p === '...' ? (
+                                                <span key={`ellipsis-${idx}`} className="px-2 text-muted">…</span>
+                                            ) : (
+                                                <button
+                                                    key={p}
+                                                    className={`btn ${p === page ? 'btn-primary' : 'btn-outline-secondary'}`}
+                                                    onClick={() => handleSearch(p)}
+                                                >{p}</button>
+                                            )
+                                        )
+                                    }
+
+                                    <button
+                                        className="btn btn-outline-primary"
+                                        disabled={page === totalPages}
+                                        onClick={() => handleSearch(page + 1)}
+                                    >Next ›</button>
+                                    <button
+                                        className="btn btn-outline-primary"
+                                        disabled={page === totalPages}
+                                        onClick={() => handleSearch(totalPages)}
+                                    >Last »</button>
+                                </div>
                             )}
                         </div>
                     </div>
