@@ -32,7 +32,9 @@
         "racial_indicator": "none",
         "needs_human_review": false,
         "reasoning": "The provided text is the title page and copyright information for the Acts of the General Assembly of Kentucky for the year 1965. It does not contain any actual statute text. Therefore, it cannot be classified as a Jim Crow law. The document type is 'session_laws' as it refers to the 'Acts of the General Assembly'. No racial indicators are present, and no Jim Crow characteristics can be identified from this page alone."
-      }
+      },
+      "reviewer_note": "",
+      "reviewed": true
     },
     {
       "entry_id": "gen_assemb_1965_p2",
@@ -56,7 +58,9 @@
         "racial_indicator": "none",
         "needs_human_review": false,
         "reasoning": "The provided text is solely the title page and bibliographic information for the Kentucky Session Laws of 1965. It does not contain any actual statute text. Therefore, it is impossible to classify it as a Jim Crow law or any other type of law. The document type is 'session_laws' as indicated by 'ACTS OF THE GENERAL ASSEMBLY OF THE COMMONWEALTH OF KENTUCKY'. Since no statute text is present, it cannot be classified as Jim Crow, and the confidence is high that it is not. Human review is not needed as the lack of content is clear."
-      }
+      },
+      "reviewer_note": "",
+      "reviewed": true
     },
     {
       "entry_id": "gen_assemb_1965_p3",
@@ -81,7 +85,9 @@
         "racial_indicator": "none",
         "needs_human_review": false,
         "reasoning": "The provided text is the cover page or title page of a legislative document, specifically the 'Acts of the General Assembly of the Commonwealth of Kentucky' for a 1965 extraordinary session. It does not contain any actual statute text. Therefore, it's impossible to determine if it's a Jim Crow law or not. Based on the available information, it is classified as 'no' for Jim Crow, with high confidence, as there's no indication of such content. The category is null because it's not a statute. The document type is correctly identified as 'session_laws'. Human review is not needed as the lack of content prevents analysis, not ambiguity."
-      }
+      },
+      "reviewer_note": "",
+      "reviewed": true
     },
     {
       "entry_id": "gen_assemb_1965_p4",
@@ -105,7 +111,9 @@
         "racial_indicator": "none",
         "needs_human_review": false,
         "reasoning": "The provided text is only the title page of the Acts of the General Assembly of Kentucky for a specific session in 1965. It does not contain any substantive legal text that would indicate whether it is a Jim Crow law or not. Therefore, it cannot be classified as a Jim Crow law. The document type is 'session_laws' as it explicitly states 'Acts of the General Assembly'. Confidence is high that it's not a Jim Crow law because there's no content to suggest it is. Needs human review is false because the lack of content makes it definitively not a Jim Crow law, rather than ambiguous."
-      }
+      },
+      "reviewer_note": "",
+      "reviewed": true
     },
     {
       "entry_id": "gen_assemb_1965_p5",
@@ -128,7 +136,9 @@
         "racial_indicator": "none",
         "needs_human_review": false,
         "reasoning": "The provided text is not a statute but rather information about the printer and publisher of a document. It does not contain any legal content, therefore it cannot be classified as a Jim Crow law. The confidence is high because the nature of the text is clearly not a statute. The category is null as it is not a Jim Crow law. The document type is 'other' as it's not a legislative act, constitution, code, etc."
-      }
+      },
+      "reviewer_note": "",
+      "reviewed": true
     },
     {
       "entry_id": "gen_assemb_1965_p6",
@@ -158,7 +168,9 @@
         "racial_indicator": "none",
         "needs_human_review": false,
         "reasoning": "The provided text is a foreword to the 1965 Kentucky Acts. It describes the administrative and editorial processes involved in publishing legislative acts. There is no mention of race, segregation, or any other element typically associated with Jim Crow laws. Therefore, it is not a Jim Crow statute."
-      }
+      },
+      "reviewer_note": "",
+      "reviewed": true
     },
     {
       "entry_id": "gen_assemb_1965_p7",
@@ -182,7 +194,9 @@
         "racial_indicator": "none",
         "needs_human_review": false,
         "reasoning": "The provided text is a header for a PDF document containing Kentucky statutes from 1965. It includes information about the source (University of Kentucky, HathiTrust) and digitization details. It does not contain the actual text of any statute, therefore it is impossible to classify it as a Jim Crow law or any other type of law. Based on the available information, it is a collection of session laws. Since no statute text is present, it cannot be classified as Jim Crow. Therefore, 'is_jim_crow' is 'no', 'category' is null, and 'racial_indicator' is 'none'. Confidence is high because the lack of statute text is definitive. Needs human review is false because the classification is straightforward based on the absence of relevant content."
-      }
+      },
+      "reviewer_note": "",
+      "reviewed": true
     },
     {
       "entry_id": "gen_assemb_1965_p8",
@@ -207,7 +221,9 @@
         "racial_indicator": "none",
         "needs_human_review": false,
         "reasoning": "The provided text is a table of contents for a legislative session. It lists chapter numbers, bill/resolution numbers, and the names of the sponsors. There is no content within this table of contents that describes the actual laws or resolutions passed. Therefore, it is impossible to determine if any of the statutes are Jim Crow laws based solely on this index. The document type is 'session_laws' as it refers to acts passed at a legislative session. Since no racial indicators or Jim Crow characteristics can be identified, 'is_jim_crow' is 'no', 'confidence' is high (as the absence of information is clear), and 'category' is null. 'needs_human_review' is false because the document itself is not a statute, but an index, and thus cannot contain Jim Crow laws."
-      }
+      },
+      "reviewer_note": "",
+      "reviewed": true
     },
     {
       "entry_id": "gen_assemb_1965_p9",
@@ -231,7 +247,9 @@
         "racial_indicator": "none",
         "needs_human_review": false,
         "reasoning": "The provided text is a table of contents or index for the legislative acts of 1965, specifically listing the chapter assignments for bills and resolutions. It does not contain any substantive legal text that would indicate discriminatory practices based on race. Therefore, it is not a Jim Crow law. The document type is 'session_laws' as it pertains to acts passed during a legislative session. Confidence is high because the content is purely organizational and lacks any legal provisions."
-      }
+      },
+      "reviewer_note": "",
+      "reviewed": true
     },
     {
       "entry_id": "gen_assemb_1965_p10",
@@ -257,7 +275,9 @@
         "racial_indicator": "none",
         "needs_human_review": false,
         "reasoning": "The provided statute is a joint resolution from the 1965 Kentucky General Assembly that deals with appropriations for legislative expenses. It does not contain any language related to racial segregation, discrimination, or any other aspect typically associated with Jim Crow laws. Therefore, it is classified as 'no' for 'is_jim_crow', with a confidence of 1.0. The category is null as it is not a Jim Crow law. The document type is 'session_laws' as it is an act passed by the General Assembly. The racial indicator is 'none' as race is not mentioned. Human review is not needed."
-      }
+      },
+      "reviewer_note": "",
+      "reviewed": true
     },
     {
       "entry_id": "gen_assemb_1965_p11",
@@ -283,7 +303,9 @@
         "racial_indicator": "none",
         "needs_human_review": false,
         "reasoning": "The provided statute text pertains to legislative appropriations and the declaration of an emergency for fiscal matters. It does not contain any language, explicit or implicit, that suggests racial discrimination or segregation. Therefore, it is classified as 'no' for Jim Crow laws, with a confidence of 1.0. The category is null as it is not a Jim Crow law. The document type is 'session_laws' as it refers to acts passed during a legislative session. There is no racial indicator, and human review is not needed."
-      }
+      },
+      "reviewer_note": "",
+      "reviewed": true
     },
     {
       "entry_id": "gen_assemb_1965_p12",
@@ -311,7 +333,9 @@
         "racial_indicator": "none",
         "needs_human_review": false,
         "reasoning": "The statute's text focuses entirely on revenue and taxation policy, specifically addressing property assessment values and the limitations on ad valorem taxes. There is no mention of race, nor are there any provisions that implicitly or explicitly create racial distinctions or segregation. The preamble discusses general principles of taxation, fiscal responsibility, and public services, which are not inherently tied to racial discrimination. Therefore, this statute is not a Jim Crow law."
-      }
+      },
+      "reviewer_note": "",
+      "reviewed": true
     },
     {
       "entry_id": "gen_assemb_1965_p13",
@@ -1010,7 +1034,7 @@
       "source_filename": "Gen Assemb 1965.pdf",
       "page_number": 39,
       "year": 1965,
-      "ocr_text": "30 Acts, First Extraordinary Session\nCHAPTER 4\n(S. R. 4)\nA JOINT RESOLUTION ratifying a proposed amendment to the Con\nstitution of the United States.\nWHEREAS, Senate Joint Resolution 1 of the Eighty-Ninth Congress\n(First Session) proposes an amendment to the Constitution of the\nUnited States; and\nWHEREAS, the amendment so proposed shall be valid to all intents\nand purposes as part of the Constitution of the United States when\nratified by the legislatures of three-fourths of the several states\nwithin seven years from the date of its submission by the Congress;\nand\nWHEREAS, the purpose of the proposed amendment is in keeping with\nthe desires of the people of this Commonwealth to insure an orderly\nand responsible exercise of the powers and duties vested in the\nhighest executive office of the national government; and to insure\nthe proper discharge of the office of President of the United States\nand the office of Vice President of the United States;\nNOW, THEREFORE,\nBe it resolved by the General Assembly of the Commonwealth\nof Kentucky:\nSection 1. The amendment to the Constitution of the\nUnited States proposed by Senate Joint Resolution 1 of the\nEighty-Ninth Congress ( First Session ) , entitled \"Joint Resolution\nproposing an amendment to the Constitution of the United\nStates relating to succession to the Presidency and Vice Presi\ndency and to cases where the President is unable to discharge\nthe powers and duties of his office\" and reading as follows, hereby\nis ratified:\n\"Article\u2014\n\"Section 1. In case of the removal of the President from\noffice or of his death or resignation, the Vice President shall\nbecome President.\n\"Section 2. Whenever there is a vacancy in the office\nof the Vice President, the President shall nominate a Vice\nPresident who shall take office upon confirmation by a\nmajority vote of both Houses of Congress.\n\"Section 3. Whenever the President transmits to the\nPresident pro tempore of the Senate and the Speaker of the",
+      "ocr_text": "30 Acts, First Extraordinary Session\nCHAPTER 4\n(S. R. 4)\nA JOINT RESOLUTION ratifying a proposed amendment to the Con\nstitution of the United States.\nWHEREAS, Senate Joint Resolution 1 of the Eighty-Ninth Congress\n(First Session) proposes an amendment to the Constitution of the\nUnited States; and\nWHEREAS, the amendment so proposed shall be valid to all intents\nand purposes as part of the Constitution of the United States when\nratified by the legislatures of three-fourths of the several states\nwithin seven years from the date of its submission by the Congress;\nand\nWHEREAS, the purpose of the proposed amendment is in keeping with\nthe desires of the people of this Commonwealth to insure an orderly\nand responsible exercise of the powers and duties vested in the\nhighest executive office of the national government; and to insure\nthe proper discharge of the office of President of the United States\nand the office of Vice President of the United States;\nNOW, THEREFORE,\nBe it resolved by the General Assembly of the Commonwealth\nof Kentucky:\nSection 1. The amendment to the Constitution of the\nUnited States proposed by Senate Joint Resolution 1 of the\nEighty-Ninth Congress ( First Session ) , entitled \"Joint Resolution\nproposing an amendment to the Constitution of the United\nStates relating to succession to the Presidency and Vice Presi\ndency and to cases where the President is unable to discharge\nthe powers and duties of his office\" and reading as follows, hereby\nis ratified:\n\"Article—\n\"Section 1. In case of the removal of the President from\noffice or of his death or resignation, the Vice President shall\nbecome President.\n\"Section 2. Whenever there is a vacancy in the office\nof the Vice President, the President shall nominate a Vice\nPresident who shall take office upon confirmation by a\nmajority vote of both Houses of Congress.\n\"Section 3. Whenever the President transmits to the\nPresident pro tempore of the Senate and the Speaker of the",
       "citation": "Acts of the General Assembly of the Commonwealth of Kentucky, Extraordinary Session, 1965, p. 39",
       "classification": {
         "is_jim_crow": "no",
@@ -1235,7 +1259,7 @@
       "source_filename": "Gen Assemb 1965.pdf",
       "page_number": 48,
       "year": 1965,
-      "ocr_text": "Convention for revision, referendum on................................................ 28\n\n**COUNTIES CONTAINING CITIES OF THE FIRST CLASS**\nOccupational license fees, provisions on................................................ 22-27\n\n**COUNTIES, GENERALLY**\nAd valorem tax revenue, limitation of................................................ 15\nAgricultural products, unmanufactured,\nad valorem tax rate on................................................ 18\nBudget, limitation of................................................ 14\nProperty tax rate, limitation on................................................ 16, 17, 19\n\n**EDUCATION**\nDistrict budgets, limitation of................................................ 6\nFoundation fund, local tax effort under................................................ 21\nTax rate, limitation on................................................ 10, 11, 19\nTax revenue, limitation of................................................ 7\n\n**GENERAL ASSEMBLY**\nSalaries and expenses, appropriation for................................................ 1\n\n**LEGISLATIVE RESEARCH COMMISSION**\nAppropriation for session, provision of................................................ 1\n\n**STATUTES**\nSections amended, created or repealed\u2014\n68.180, amended................................................ 25\n68.185, amended................................................ 26\n68.190, amended................................................ 26\n68.240, amended................................................ 13\n132.010, amended................................................ 17\n132.020, amended................................................ 3\n132.200, amended................................................ 18\n\nDigitized by Google\nOriginal from\nUNIVERSITY OF CALIFORNIA",
+      "ocr_text": "Convention for revision, referendum on................................................ 28\n\n**COUNTIES CONTAINING CITIES OF THE FIRST CLASS**\nOccupational license fees, provisions on................................................ 22-27\n\n**COUNTIES, GENERALLY**\nAd valorem tax revenue, limitation of................................................ 15\nAgricultural products, unmanufactured,\nad valorem tax rate on................................................ 18\nBudget, limitation of................................................ 14\nProperty tax rate, limitation on................................................ 16, 17, 19\n\n**EDUCATION**\nDistrict budgets, limitation of................................................ 6\nFoundation fund, local tax effort under................................................ 21\nTax rate, limitation on................................................ 10, 11, 19\nTax revenue, limitation of................................................ 7\n\n**GENERAL ASSEMBLY**\nSalaries and expenses, appropriation for................................................ 1\n\n**LEGISLATIVE RESEARCH COMMISSION**\nAppropriation for session, provision of................................................ 1\n\n**STATUTES**\nSections amended, created or repealed—\n68.180, amended................................................ 25\n68.185, amended................................................ 26\n68.190, amended................................................ 26\n68.240, amended................................................ 13\n132.010, amended................................................ 17\n132.020, amended................................................ 3\n132.200, amended................................................ 18\n\nDigitized by Google\nOriginal from\nUNIVERSITY OF CALIFORNIA",
       "citation": "Acts of the General Assembly of the Commonwealth of Kentucky, Extraordinary Session, 1965, p. 48",
       "classification": {
         "is_jim_crow": "no",
@@ -1385,10 +1409,14 @@
   ],
   "human_review_queue": [],
   "statistics": {
-    "total_sections": 53,
-    "classified_jim_crow": 0,
-    "ambiguous": 0,
-    "needs_human_review": 0,
-    "not_jim_crow": 53
+    "total_entries": 53,
+    "jim_crow_count": 0,
+    "non_jim_crow_count": 53,
+    "ambiguous_count": 0,
+    "reviewed": 12,
+    "by_category": {
+      "education": 8,
+      "other": 2
+    }
   }
 }
